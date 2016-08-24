@@ -65,6 +65,9 @@ func (this *HostCreator) create() {
 		myHost.SSHPort = this.d.GetSSHPort()
 		myHost.GetSHHostname = this.d.GetSHHostname()
 		myHost.State = this.d.GetState()
+		myHost.Roles = this.h.Roles
+		myHost.MachineName = this.d.GetMachineName()
+		myHost.SSHKeyPath = this.d.GetSSHKeyPath()
 	} else {
 		myHost.Err = this.err
 		log.Warnf("Failed to create host %s: %s\n", this.h.Name, myHost.Err)

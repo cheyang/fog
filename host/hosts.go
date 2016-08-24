@@ -9,17 +9,13 @@ import (
 	"github.com/cheyang/fog/types"
 )
 
-// step 2
-func CreateInBatch(vmConfigs []types.VMSpec, driverName string, hostBus chan<- Host) (count int, err error) {
-
-	if driverName == "" {
-		return count, fmt.Errorf("driver name is not specified.")
-	}
+// Create hosts in batch
+func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- Host) (err error) {
 
 	// make working directory
 	pwd, err := os.Getwd()
 	if err != nil {
-		return count, err
+		return err
 	}
 	t := time.Now()
 	timestamp := fmt.Sprint(t.Format("20060102150405"))
@@ -28,19 +24,24 @@ func CreateInBatch(vmConfigs []types.VMSpec, driverName string, hostBus chan<- H
 	os.Remove(storePath)
 	err = os.Symlink(fogDir, storePath)
 	if err != nil {
-		return count, err
+		return err
 	}
 
-	// vmConfigs, err := BuildHostConfigs(spec)
+	// vmSpecs, err := BuildHostConfigs(spec)
 	// if err == nil {
 	// 	return count, err
 	// }
 
-	for _, vm := range vmConfigs {
+	for _, vm := range vmSpecs {
 		// go create(vm, driverName, hostBus)
+
+		driverName := vm.Driver
+		if driverName == "" {
+			return fmt.Errorf("driver name is not specified.")
+		}
 		driver, err := initDrivers(driverName, vm, storePath)
 		if err != nil {
-			return count, err
+			return err
 		}
 
 		h := &HostCreator{
@@ -53,18 +54,18 @@ func CreateInBatch(vmConfigs []types.VMSpec, driverName string, hostBus chan<- H
 		go h.create()
 	}
 
-	return len(vmConfigs), nil
+	return nil
 
 }
 
 // step 1
-func BuildHostConfigs(specs types.Spec) (vmConfigs []types.VMSpec, err error) {
+func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 
 	dup := make(map[string]bool)
 	for _, spec := range specs.VMSpecs {
 
 		if spec.Name == "" {
-			return vmConfigs, fmt.Errorf("Please specify the name")
+			return vmSpecs, fmt.Errorf("Please specify the name")
 		}
 
 		if _, found := dup[spec.Name]; found {
@@ -83,16 +84,19 @@ func BuildHostConfigs(specs types.Spec) (vmConfigs []types.VMSpec, err error) {
 				vm := spec
 				vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
 				vm.Properties = mergeProperties(spec.Properties, spec.Properties)
-				vmConfigs = append(vmConfigs, vm)
+				if len(vm.Roles) == 0 {
+					return ni, fmt.Errorf("please specify the role of %s", spec.Name)
+				}
+				vmSpecs = append(vmSpecs, vm)
 			}
 		} else {
 			vm := spec
 			vm.Properties = mergeProperties(spec.Properties, spec.Properties)
-			vmConfigs = append(vmConfigs, vm)
+			vmSpecs = append(vmSpecs, vm)
 		}
 	}
 
-	return vmConfigs, nil
+	return vmSpecs, nil
 }
 
 func mergeProperties(global, current map[string]interface{}) map[string]interface{} {

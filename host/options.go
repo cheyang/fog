@@ -1,11 +1,13 @@
 package host
 
+import "github.com/docker/machine/libmachine/drivers"
+
 type ConfigFlagger struct {
 	Data map[string]interface{}
 }
 
-func NewConfigFlagger(data map[string]interface{}) drivers.DriverOptions{
-     return ConfigFlagger{Data: data}
+func NewConfigFlagger(data map[string]interface{}) drivers.DriverOptions {
+	return ConfigFlagger{Data: data}
 }
 
 func (this ConfigFlagger) String(key string) string {
@@ -19,7 +21,7 @@ func (this ConfigFlagger) StringSlice(key string) []string {
 	if value, ok := this.Data[key]; ok {
 		return value.([]string)
 	}
-	return []string
+	return []string{}
 }
 
 func (this ConfigFlagger) Int(key string) int {

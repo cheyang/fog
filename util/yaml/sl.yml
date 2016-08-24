@@ -1,0 +1,34 @@
+---
+vmspec:
+  -
+    name: kube-master
+    roles:
+      - master
+      - etcd
+    driver: softlayer
+    instances: 1
+    properties:
+      softlayerecs-image: UBUNTU_LATEST
+      softlayer-private-vlan-id: cn-hangzhou
+      softlayerecs-instance-type: abc
+      softlayerecs-description: abc
+      softlayer-region: abc
+      softlayer-hourly-billing: true
+  -
+    name: kube-slave
+    roles:
+      - slave
+    instances: 2
+    driver: softlayer
+    properties:
+      softlayerecs-image-id: UBUNTU_LATEST
+      softlayer-private-vlan-id: cn-hangzhou
+      softlayerecs-instance-type: abc
+      softlayerecs-description: abc
+      softlayer-region: abc
+      softlayer-hourly-billing: true
+run:
+properties:
+  softlayer-api-key: abc
+  softlayer-user: ecd
+  softlayer-api-endpoint: https://api.service.softlayer.com/rest/v3/
