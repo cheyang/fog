@@ -7,8 +7,8 @@ import (
 	"io"
 	"unicode"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/ghodss/yaml"
-	"github.com/golang/glog"
 )
 
 // ToJSON converts a single YAML document into a JSON document
@@ -122,10 +122,10 @@ func (d *YAMLOrJSONDecoder) Decode(into interface{}) error {
 	if d.decoder == nil {
 		buffer, isJSON := guessJSONStream(d.r, d.bufferSize)
 		if isJSON {
-			glog.V(4).Infof("decoding stream as JSON")
+			log.Infof("decoding stream as JSON")
 			d.decoder = json.NewDecoder(buffer)
 		} else {
-			glog.V(4).Infof("decoding stream as YAML")
+			log.Infof("decoding stream as YAML")
 			d.decoder = NewYAMLToJSONDecoder(buffer)
 		}
 	}
