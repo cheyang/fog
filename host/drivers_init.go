@@ -5,7 +5,6 @@ import (
 
 	"github.com/cheyang/fog/types"
 	"github.com/denverdino/docker-machine-driver-aliyunecs/aliyunecs"
-	"github.com/docker/machine/drivers/amazonec2"
 	"github.com/docker/machine/drivers/openstack"
 	"github.com/docker/machine/drivers/softlayer"
 	"github.com/docker/machine/libmachine/drivers"
@@ -14,13 +13,14 @@ import (
 var initFuncMaps = map[string]func(hostname, storePath string) drivers.Driver{
 	"aliyun":    aliyunecs.NewDriver,
 	"softlayer": softlayer.NewDriver,
-	"aws":       amazonec2.NewDriver,
+	// "aws":       amazonec2.NewDriver,
 	"openstack": openstack.NewDriver,
 }
 
-func initDrivers(driverName, hostConfig types.VMSpec, storePath string) (drivers.Driver, error) {
+func initDrivers(driverName string, hostConfig types.VMSpec, storePath string) (drivers.Driver, error) {
 
-	if driverFunc, found := initFuncMaps[driverName]; !found {
+	driverFunc, found := initFuncMaps[driverName]
+	if !found {
 		return nil, fmt.Errorf("Driver %s is not found.", driverName)
 	}
 	d := driverFunc(hostConfig.Name, storePath)

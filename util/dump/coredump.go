@@ -1,14 +1,15 @@
 package dump
 
 import (
-	"runtime"
-
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 	"time"
+
+	"github.com/Sirupsen/logrus"
 )
 
 func StackTrace(all bool) string {
@@ -56,6 +57,6 @@ func InstallCoreDumpGenerator() {
 }
 
 func coredump(fileName string) {
-	Infoln("Dump stacktrace to ", fileName)
+	logrus.Infoln("Dump stacktrace to ", fileName)
 	ioutil.WriteFile(fileName, []byte(StackTrace(true)), 0644)
 }

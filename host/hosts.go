@@ -10,7 +10,7 @@ import (
 )
 
 // Create hosts in batch
-func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- Host) (err error) {
+func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error) {
 
 	// make working directory
 	pwd, err := os.Getwd()
@@ -35,7 +35,7 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- Host) (err error) {
 	for _, vm := range vmSpecs {
 		// go create(vm, driverName, hostBus)
 
-		driverName := vm.Driver
+		driverName := vm.CloudDriverName
 		if driverName == "" {
 			return fmt.Errorf("driver name is not specified.")
 		}
@@ -85,13 +85,20 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 				vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
 				vm.Properties = mergeProperties(spec.Properties, spec.Properties)
 				if len(vm.Roles) == 0 {
-					return ni, fmt.Errorf("please specify the role of %s", spec.Name)
+					return vmSpecs, fmt.Errorf("please specify the role of %s", spec.Name)
+				}
+				// Set common cloud driver name if not specified
+				if vm.CloudDriverName == "" {
+					vm.CloudDriverName = specs.CloudDriverName
 				}
 				vmSpecs = append(vmSpecs, vm)
 			}
 		} else {
 			vm := spec
 			vm.Properties = mergeProperties(spec.Properties, spec.Properties)
+			if vm.CloudDriverName == "" {
+				vm.CloudDriverName = specs.CloudDriverName
+			}
 			vmSpecs = append(vmSpecs, vm)
 		}
 	}

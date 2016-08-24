@@ -1,31 +1,34 @@
 package types
 
 import (
+	"github.com/docker/engine-api/types/container"
 	"github.com/docker/machine/libmachine/state"
-	docker "github.com/fsouza/go-dockerclient"
 )
 
 type Spec struct {
-	VMSpecs    []VMSpec               `json:"vmspec"`
-	Properties map[string]interface{} `json:"Global,omitempty"`
-	Run        docker.Container       `json:"run"`
+	VMSpecs         []VMSpec               `json:"Vmspecs"`
+	Properties      map[string]interface{} `json:"Global,omitempty"`
+	Run             container.Config       `json:"Run"`
+	ClusterType     string                 `json:"ClusterType"`
+	CloudDriverName string                 `json:"Driver"`
 }
 
 type VMSpec struct {
-	Name       string                 `json:"name"`
-	Roles      []string               `json:"roles"`
-	Properties map[string]interface{} `json:"properties,omitempty"`
-	Driver     string                 `json:"driver"`
-	Instances  int                    `json:"instances,omitempty"`
+	Name            string                 `json:"Name"`
+	Roles           []string               `json:"Roles"`
+	Properties      map[string]interface{} `json:"Properties,omitempty"`
+	CloudDriverName string                 `json:"Driver"`
+	Instances       int                    `json:"Instances,omitempty"`
 }
 
 type Host struct {
 	Err         error
 	MachineName string
 	SSHUserName string
-	SSHPort     string
+	SSHPort     int
 	SSHHostname string
 	SSHKeyPath  string
 	Roles       []string
 	State       state.State
+	VMSpec
 }
