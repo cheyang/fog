@@ -6,11 +6,13 @@ import (
 )
 
 type Spec struct {
+	Name            string                 `json:"ClusterName"` // The name of the cluster
+	ClusterType     string                 `json:"ClusterType"` // The type of cluster
 	VMSpecs         []VMSpec               `json:"Vmspecs"`
 	Properties      map[string]interface{} `json:"Global,omitempty"`
 	Run             container.Config       `json:"Run"`
-	ClusterType     string                 `json:"ClusterType"`
 	CloudDriverName string                 `json:"Driver"`
+	Update          bool                   `json:"Update"` // Update an exist cluster?
 }
 
 type VMSpec struct {

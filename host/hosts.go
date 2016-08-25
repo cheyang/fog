@@ -4,33 +4,16 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/cheyang/fog/types"
 )
+
+var storePath string
 
 // Create hosts in batch
 func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error) {
 
 	// make working directory
-	pwd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	t := time.Now()
-	timestamp := fmt.Sprint(t.Format("20060102150405"))
-	fogDir := filepath.Join(pwd, ".fog", timestamp)
-	storePath := filepath.Join(pwd, ".fog", "latest")
-	os.Remove(storePath)
-	err = os.Symlink(fogDir, storePath)
-	if err != nil {
-		return err
-	}
-
-	// vmSpecs, err := BuildHostConfigs(spec)
-	// if err == nil {
-	// 	return count, err
-	// }
 
 	for _, vm := range vmSpecs {
 		// go create(vm, driverName, hostBus)
@@ -44,11 +27,12 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 			return err
 		}
 
-		h := &HostCreator{
-			d:   driver,
-			h:   vm,
-			bus: hostBus,
-			err: nil,
+		h := &HostHandler{
+			Name:      vm.Name,
+			Driver:    driver,
+			VMSpec:    vm,
+			createBus: hostBus,
+			err:       nil,
 		}
 
 		go h.create()
@@ -58,8 +42,31 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 
 }
 
+func createStorePath(specs types.Spec) error {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	storePath = filepath.Join(pwd, ".fog", specs.ClusterType, specs.Name)
+
+	// if the dir exists and not update mode
+	if _, err := os.Stat(storePath); !os.IsNotExist(err) {
+		if !specs.Update {
+			return fmt.Errorf("working dir %s is not clean, can't work in create mode", storePath)
+		}
+	}
+
+	os.MkdirAll(path, perm)
+
+}
+
 // step 1
 func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
+
+	if err := createStorePath(specs); err != nil {
+		return vmSpecs, err
+	}
 
 	dup := make(map[string]bool)
 	for _, spec := range specs.VMSpecs {
