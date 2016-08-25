@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/types"
 )
 
@@ -71,29 +70,29 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 	}
 
 	dup := make(map[string]bool)
-	for _, spec := range specs.VMSpecs {
+	for _, vmSpec := range specs.VMSpecs {
 
-		if spec.Name == "" {
+		if vmSpec.Name == "" {
 			return vmSpecs, fmt.Errorf("Please specify the name")
 		}
 
-		if _, found := dup[spec.Name]; found {
-			return nil, fmt.Errorf("duplicate name %s in configuration file.", spec.Name)
+		if _, found := dup[vmSpec.Name]; found {
+			return nil, fmt.Errorf("duplicate name %s in configuration file.", vmSpec.Name)
 		} else {
-			dup[spec.Name] = true
+			dup[vmSpec.Name] = true
 		}
 
 		// if the attribute 'instances' is not specified, set it as 1
-		if spec.Instances == 0 {
-			spec.Instances = 1
+		if vmSpec.Instances == 0 {
+			vmSpec.Instances = 1
 		}
 
-		for i := 0; i < spec.Instances; i++ {
+		for i := 0; i < vmSpec.Instances; i++ {
 			vm := spec
 			vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
 			vm.Properties = mergeProperties(specs.Properties, vm.Properties)
 			if len(vm.Roles) == 0 {
-				return vmSpecs, fmt.Errorf("please specify the role of %s", spec.Name)
+				return vmSpecs, fmt.Errorf("please specify the role of %s", vmSpec.Name)
 			}
 			// Set common cloud driver name if not specified
 			if vm.CloudDriverName == "" {
@@ -110,17 +109,17 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 func mergeProperties(global, current map[string]interface{}) map[string]interface{} {
 
 	merged := make(map[string]interface{})
-	logrus.Infof("global: %+v", global)
+	// logrus.Infof("global: %+v", global)
 	for k, v := range global {
 		merged[k] = v
 	}
 
-	logrus.Infof("current: %+v", current)
+	// logrus.Infof("current: %+v", current)
 	for k, v := range current {
 		merged[k] = v
 	}
 
-	logrus.Infof("merged: %+v", merged)
+	// logrus.Infof("merged: %+v", merged)
 
 	return merged
 }

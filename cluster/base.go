@@ -22,7 +22,11 @@ func (this ansibleDeployer) Run() error {
 		fmt.Printf("[%s]\n", k)
 
 		for _, h := range hosts {
-			fmt.Printf("%s %s %s", h.Name, h.SSHHostname, h.SSHUserName)
+			fmt.Printf("%s ansible_host=%s ansible_user=%s ansible_ssh_private_key_file=%s",
+				h.Name,
+				h.SSHHostname,
+				h.SSHUserName,
+				h.SSHKeyPath)
 		}
 
 		fmt.Println("")
