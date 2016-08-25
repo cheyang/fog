@@ -1,34 +1,44 @@
 ---
-vmspec:
+Vmspec:
   -
-    name: kube-master
-    roles:
+    Name: kube-master
+    Roles:
       - master
       - etcd
-    driver: softlayer
-    instances: 1
-    properties:
-      softlayerecs-image: UBUNTU_LATEST
+    Instances: 1
+    Properties:
+      softlayerecs-image: DEBIAN_LATEST
       softlayer-private-vlan-id: cn-hangzhou
-      softlayerecs-instance-type: abc
-      softlayerecs-description: abc
+      softlayer-instance-type: abc
+      softlayer-description: abc
       softlayer-region: abc
+      softlayer-cpu: 2
+      softlayer-memory: 1024
       softlayer-hourly-billing: true
+      softlayer-private-net-only: true
+      softlayer-network-max-speed: 1000
+      softlayer-private-net-only: true
   -
-    name: kube-slave
+    Name: kube-slave
     roles:
       - slave
-    instances: 2
-    driver: softlayer
-    properties:
-      softlayerecs-image-id: UBUNTU_LATEST
+    Instances: 2
+    Properties:
+      softlayer-image-id: DEBIAN_LATEST
       softlayer-private-vlan-id: cn-hangzhou
-      softlayerecs-instance-type: abc
-      softlayerecs-description: abc
+      softlayer-instance-type: abc
+      softlayer-description: abc
       softlayer-region: abc
+      softlayer-cpu: 2
+      softlayer-memory: 1024
       softlayer-hourly-billing: true
-run:
-properties:
+      softlayer-private-net-only: true
+      softlayer-network-max-speed: 1000
+      softlayer-private-net-only: true
+Driver: softlayer
+ClusterType: k8s
+Run:
+Properties:
   softlayer-api-key: abc
   softlayer-user: ecd
   softlayer-api-endpoint: https://api.service.softlayer.com/rest/v3/
