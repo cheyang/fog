@@ -2,6 +2,7 @@ package types
 
 import (
 	"github.com/docker/engine-api/types/container"
+	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/state"
 )
 
@@ -33,4 +34,5 @@ type Host struct {
 	Roles       []string
 	State       state.State
 	VMSpec
+	Driver drivers.Driver
 }

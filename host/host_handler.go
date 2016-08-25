@@ -72,6 +72,7 @@ func (this *HostHandler) create() {
 		myHost.MachineName = this.Driver.GetMachineName()
 		myHost.SSHKeyPath = this.Driver.GetSSHKeyPath()
 		myHost.SSHHostname, this.err = this.Driver.GetSSHHostname()
+		myHost.Driver = this.Driver
 
 		if this.err == nil {
 			myHost.State, this.err = this.Driver.GetState()
@@ -97,7 +98,7 @@ func (this *HostHandler) create() {
 		log.Warnf("Failed to create host %s: %s\n", this.Name, myHost.Err)
 	}
 
-	err = storage.Save(this)
+	err = storage.Save(myHost)
 	if err != nil {
 		log.Warnf("Error in saving to file store %s: %s ", this.Name, err)
 	}

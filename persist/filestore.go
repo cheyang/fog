@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cheyang/fog/host"
+	"github.com/cheyang/fog/types"
 	"github.com/docker/machine/libmachine/mcnerror"
 )
 
@@ -25,7 +25,7 @@ func (s Filestore) GetMachinesDir() string {
 	return filepath.Join(s.Path, "machines")
 }
 
-func (s Filestore) Save(host *host.HostHandler) error {
+func (s Filestore) Save(host *types.Host) error {
 	data, err := json.MarshalIndent(host, "", "    ")
 	if err != nil {
 		return err
@@ -99,7 +99,7 @@ func (s Filestore) Exists(name string) (bool, error) {
 	return false, err
 }
 
-func (s Filestore) loadConfig(h *host.HostHandler) error {
+func (s Filestore) loadConfig(h *types.Host) error {
 	data, err := ioutil.ReadFile(filepath.Join(s.GetMachinesDir(), h.Name, "config.json"))
 	if err != nil {
 		return err
@@ -109,7 +109,7 @@ func (s Filestore) loadConfig(h *host.HostHandler) error {
 
 }
 
-func (s Filestore) Load(name string) (*host.HostHandler, error) {
+func (s Filestore) Load(name string) (*types.Host, error) {
 	hostPath := filepath.Join(s.GetMachinesDir(), name)
 
 	if _, err := os.Stat(hostPath); os.IsNotExist(err) {
@@ -118,8 +118,8 @@ func (s Filestore) Load(name string) (*host.HostHandler, error) {
 		}
 	}
 
-	host := &host.HostHandler{
-		Name: name,
+	host := &types.Host{
+		MachineName: name,
 	}
 
 	if err := s.loadConfig(host); err != nil {

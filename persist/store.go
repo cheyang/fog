@@ -1,6 +1,6 @@
 package persist
 
-import "github.com/cheyang/fog/host"
+import "github.com/cheyang/fog/types"
 
 type Store interface {
 	// Exists returns whether a machine exists or not
@@ -10,17 +10,17 @@ type Store interface {
 	List() ([]string, error)
 
 	// Load loads a host by name
-	Load(name string) (*host.HostHandler, error)
+	Load(name string) (*types.Host, error)
 
 	// Remove removes a machine from the store
 	Remove(name string) error
 
 	// Save persists a machine in the store
-	Save(host *host.HostHandler) error
+	Save(host *types.Host) error
 }
 
-func LoadHosts(s Store, hostNames []string) ([]*host.HostHandler, map[string]error) {
-	loadedHosts := []*host.HostHandler{}
+func LoadHosts(s Store, hostNames []string) ([]*types.Host, map[string]error) {
+	loadedHosts := []*types.Host{}
 	errors := map[string]error{}
 
 	for _, hostName := range hostNames {
@@ -35,7 +35,7 @@ func LoadHosts(s Store, hostNames []string) ([]*host.HostHandler, map[string]err
 	return loadedHosts, errors
 }
 
-func LoadAllHosts(s Store) ([]*host.HostHandler, map[string]error, error) {
+func LoadAllHosts(s Store) ([]*types.Host, map[string]error, error) {
 	hostNames, err := s.List()
 	if err != nil {
 		return nil, nil, err
