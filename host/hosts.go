@@ -88,7 +88,7 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 		}
 
 		for i := 0; i < vmSpec.Instances; i++ {
-			vm := spec
+			vm := vmSpec
 			vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
 			vm.Properties = mergeProperties(specs.Properties, vm.Properties)
 			if len(vm.Roles) == 0 {
