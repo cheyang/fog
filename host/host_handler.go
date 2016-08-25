@@ -23,10 +23,13 @@ type HostHandler struct {
 
 func (this *HostHandler) create() {
 
+	log.Infof("Host info %s: %+v ", this.Name, this.VMSpec)
+
 	myHost := types.Host{}
 
 	// store to path
 	storage := persist.NewFilestore(storePath)
+	storage.CreateStorePath(this.Name)
 
 	// pre-check
 	log.Infof("Running pre-create checks for  %s...\n", this.Name)
@@ -69,7 +72,7 @@ func (this *HostHandler) create() {
 		myHost.SSHUserName = this.Driver.GetSSHUsername()
 
 		myHost.Roles = this.VMSpec.Roles
-		myHost.MachineName = this.Driver.GetMachineName()
+		myHost.Name = this.Name
 		myHost.SSHKeyPath = this.Driver.GetSSHKeyPath()
 		myHost.SSHHostname, this.err = this.Driver.GetSSHHostname()
 		myHost.Driver = this.Driver

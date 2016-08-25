@@ -25,6 +25,17 @@ func (s Filestore) GetMachinesDir() string {
 	return filepath.Join(s.Path, "machines")
 }
 
+func (s Filestore) CreateStorePath(name string) error {
+	hostPath := filepath.Join(s.GetMachinesDir(), name)
+
+	// Ensure that the directory we want to save to exists.
+	if err := os.MkdirAll(hostPath, 0700); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s Filestore) Save(host *types.Host) error {
 	data, err := json.MarshalIndent(host, "", "    ")
 	if err != nil {
@@ -119,7 +130,7 @@ func (s Filestore) Load(name string) (*types.Host, error) {
 	}
 
 	host := &types.Host{
-		MachineName: name,
+		Name: name,
 	}
 
 	if err := s.loadConfig(host); err != nil {

@@ -1,5 +1,5 @@
 ---
-vmspec:
+VMSpecs:
   -
     name: master
     roles:

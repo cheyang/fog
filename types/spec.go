@@ -10,7 +10,7 @@ type Spec struct {
 	Name            string                 `json:"ClusterName"` // The name of the cluster
 	ClusterType     string                 `json:"ClusterType"` // The type of cluster
 	VMSpecs         []VMSpec               `json:"Vmspecs"`
-	Properties      map[string]interface{} `json:"Global,omitempty"`
+	Properties      map[string]interface{} `json:"Properties,omitempty"`
 	Run             container.Config       `json:"Run"`
 	CloudDriverName string                 `json:"Driver"`
 	Update          bool                   `json:"Update"` // Update an exist cluster?
@@ -26,7 +26,7 @@ type VMSpec struct {
 
 type Host struct {
 	Err         error
-	MachineName string
+	Name        string
 	SSHUserName string
 	SSHPort     int
 	SSHHostname string

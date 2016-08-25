@@ -22,7 +22,7 @@ func (this ansibleDeployer) Run() error {
 		fmt.Printf("[%s]\n", k)
 
 		for _, h := range hosts {
-			fmt.Printf("%s %s %s", h.MachineName, h.SSHHostname, h.SSHUserName)
+			fmt.Printf("%s %s %s", h.Name, h.SSHHostname, h.SSHUserName)
 		}
 
 		fmt.Println("")

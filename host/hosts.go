@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/types"
 )
 
@@ -90,7 +91,7 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 		for i := 0; i < spec.Instances; i++ {
 			vm := spec
 			vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
-			vm.Properties = mergeProperties(spec.Properties, spec.Properties)
+			vm.Properties = mergeProperties(specs.Properties, vm.Properties)
 			if len(vm.Roles) == 0 {
 				return vmSpecs, fmt.Errorf("please specify the role of %s", spec.Name)
 			}
@@ -107,9 +108,19 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 }
 
 func mergeProperties(global, current map[string]interface{}) map[string]interface{} {
-	for k, v := range current {
-		global[k] = v
+
+	merged := make(map[string]interface{})
+	logrus.Infof("global: %+v", global)
+	for k, v := range global {
+		merged[k] = v
 	}
 
-	return global
+	logrus.Infof("current: %+v", current)
+	for k, v := range current {
+		merged[k] = v
+	}
+
+	logrus.Infof("merged: %+v", merged)
+
+	return merged
 }

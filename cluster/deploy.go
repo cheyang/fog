@@ -1,6 +1,7 @@
 package cluster
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/dump"
@@ -12,6 +13,8 @@ func Bootstrap(spec types.Spec) error {
 	if err != nil {
 		return err
 	}
+
+	logrus.Infof("spec: %+v", spec)
 
 	//register dump tool
 	dump.InstallCoreDumpGenerator()
