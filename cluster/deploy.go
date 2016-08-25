@@ -1,7 +1,6 @@
 package cluster
 
 import (
-	"github.com/cheyang/fog/cloudprovider"
 	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/dump"
@@ -35,7 +34,7 @@ func Bootstrap(spec types.Spec) error {
 		hosts[i] = <-bus
 	}
 
-	cp := cloudprovider.InitProivder(spec)
+	cp := initProivder(spec.CloudDriverName, spec.ClusterType)
 	if cp != nil {
 		cp.SetHosts(hosts)
 		cp.Configure() // configure infrastructure

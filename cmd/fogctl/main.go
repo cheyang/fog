@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/cheyang/fog/deploy"
+	"github.com/cheyang/fog/cluster"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/yaml"
 	"github.com/spf13/cobra"
@@ -47,8 +47,8 @@ var mainCmd = &cobra.Command{
 			return err
 		}
 
-		deploy.Run(spec)
-		return nil
+		return cluster.Bootstrap(spec)
+
 	},
 }
 

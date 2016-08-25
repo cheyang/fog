@@ -1,6 +1,7 @@
 package k8s
 
 import (
+	"github.com/cheyang/fog/cloudprovider"
 	"github.com/cheyang/fog/types"
 	"github.com/docker/machine/libmachine/drivers"
 )
@@ -9,11 +10,11 @@ type Aliyun struct {
 	hosts []types.Host
 }
 
-func New() *Aliyun {
+func New() cloudprovider.CloudInterface {
 	return &Aliyun{}
 }
 
-func (this *Aliyun) setConfigFromFlags(opts drivers.DriverOptions) error {
+func (this *Aliyun) SetConfigFromFlags(opts drivers.DriverOptions) error {
 	return nil
 }
 func (this *Aliyun) SetHosts(hosts []types.Host) {
