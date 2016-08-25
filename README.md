@@ -1,3 +1,6 @@
 # infrastructure of infrastructure
 
- 原则：越轻量级越简单越没有侵入性
+ 原则：
+ * 越轻量级
+ * 越简单
+ * 越没有侵入性

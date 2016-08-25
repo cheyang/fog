@@ -11,7 +11,7 @@ Vmspec:
       softlayer-private-vlan-id: cn-hangzhou
       softlayer-instance-type: abc
       softlayer-description: abc
-      softlayer-region: abc
+      softlayer-region: dal05
       softlayer-cpu: 2
       softlayer-memory: 1024
       softlayer-hourly-billing: true
@@ -28,7 +28,7 @@ Vmspec:
       softlayer-private-vlan-id: cn-hangzhou
       softlayer-instance-type: abc
       softlayer-description: abc
-      softlayer-region: abc
+      softlayer-region: dal05
       softlayer-cpu: 2
       softlayer-memory: 1024
       softlayer-hourly-billing: true
