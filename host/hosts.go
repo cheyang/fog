@@ -43,12 +43,11 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 }
 
 func createStorePath(specs types.Spec) error {
-	pwd, err := os.Getwd()
-	if err != nil {
+	if pwd, err := os.Getwd(); err != nil {
 		return err
+	} else {
+		storePath = filepath.Join(pwd, ".fog", specs.ClusterType, specs.Name)
 	}
-
-	storePath = filepath.Join(pwd, ".fog", specs.ClusterType, specs.Name)
 
 	// if the dir exists and not update mode
 	if _, err := os.Stat(storePath); !os.IsNotExist(err) {
@@ -57,13 +56,15 @@ func createStorePath(specs types.Spec) error {
 		}
 	}
 
-	os.MkdirAll(path, perm)
+	if err := os.MkdirAll(storePath, 0700); err != nil {
+		return err
+	}
 
+	return nil
 }
 
 // step 1
 func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
-
 	if err := createStorePath(specs); err != nil {
 		return vmSpecs, err
 	}
@@ -86,35 +87,26 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 			spec.Instances = 1
 		}
 
-		if spec.Instances > 1 {
-			for i := 0; i < spec.Instances; i++ {
-				vm := spec
-				vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
-				vm.Properties = mergeProperties(spec.Properties, spec.Properties)
-				if len(vm.Roles) == 0 {
-					return vmSpecs, fmt.Errorf("please specify the role of %s", spec.Name)
-				}
-				// Set common cloud driver name if not specified
-				if vm.CloudDriverName == "" {
-					vm.CloudDriverName = specs.CloudDriverName
-				}
-				vmSpecs = append(vmSpecs, vm)
-			}
-		} else {
+		for i := 0; i < spec.Instances; i++ {
 			vm := spec
+			vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
 			vm.Properties = mergeProperties(spec.Properties, spec.Properties)
+			if len(vm.Roles) == 0 {
+				return vmSpecs, fmt.Errorf("please specify the role of %s", spec.Name)
+			}
+			// Set common cloud driver name if not specified
 			if vm.CloudDriverName == "" {
 				vm.CloudDriverName = specs.CloudDriverName
 			}
 			vmSpecs = append(vmSpecs, vm)
 		}
+
 	}
 
 	return vmSpecs, nil
 }
 
 func mergeProperties(global, current map[string]interface{}) map[string]interface{} {
-
 	for k, v := range current {
 		global[k] = v
 	}
