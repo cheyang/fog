@@ -32,7 +32,6 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 			Driver:    driver,
 			VMSpec:    vm,
 			createBus: hostBus,
-			err:       nil,
 		}
 
 		go h.create()

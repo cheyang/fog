@@ -37,6 +37,12 @@ func Bootstrap(spec types.Spec) error {
 		hosts[i] = <-bus
 	}
 
+	for _, host := range hosts {
+		if host.Err != nil {
+			return host.Err
+		}
+	}
+
 	cp := initProivder(spec.CloudDriverName, spec.ClusterType)
 	if cp != nil {
 		cp.SetHosts(hosts)

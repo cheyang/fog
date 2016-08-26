@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/types"
 	"github.com/docker/machine/libmachine/mcnerror"
 )
@@ -48,6 +49,8 @@ func (s Filestore) Save(host *types.Host) error {
 	if err := os.MkdirAll(hostPath, 0700); err != nil {
 		return err
 	}
+
+	logrus.Debugf("config.json: %s", filepath.Join(hostPath, "config.json"))
 
 	return s.saveToFile(data, filepath.Join(hostPath, "config.json"))
 }
