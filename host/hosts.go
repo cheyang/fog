@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/cheyang/fog/types"
+	"github.com/cheyang/fog/util/helpers"
 )
 
 var storePath string
@@ -22,7 +23,7 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 		if driverName == "" {
 			return fmt.Errorf("driver name is not specified.")
 		}
-		driver, err := initDrivers(driverName, vm, storePath)
+		driver, err := helpers.InitDrivers(driverName, vm, storePath)
 		if err != nil {
 			return err
 		}
@@ -45,7 +46,7 @@ func createStorePath(specs types.Spec) error {
 	if pwd, err := os.Getwd(); err != nil {
 		return err
 	} else {
-		storePath = filepath.Join(pwd, ".fog", specs.ClusterType, specs.Name)
+		storePath = filepath.Join(pwd, ".fog", specs.Name)
 	}
 
 	// if the dir exists and not update mode
@@ -89,6 +90,7 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 		for i := 0; i < vmSpec.Instances; i++ {
 			vm := vmSpec
 			vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
+			vm.TemplateName = vm.Name
 			vm.Properties = mergeProperties(specs.Properties, vm.Properties)
 			if len(vm.Roles) == 0 {
 				return vmSpecs, fmt.Errorf("please specify the role of %s", vmSpec.Name)

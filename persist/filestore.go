@@ -9,6 +9,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/types"
+	"github.com/cheyang/fog/util/helpers"
 	"github.com/docker/machine/libmachine/mcnerror"
 )
 
@@ -50,7 +51,14 @@ func (s Filestore) Save(host *types.Host) error {
 		return err
 	}
 
-	logrus.Debugf("config.json: %s", filepath.Join(hostPath, "config.json"))
+	logrus.Infof("config.json: %s", filepath.Join(hostPath, "config.json"))
+
+	driverPath := filepath.Join(hostPath, "cloudDriver")
+	driverName := []byte(host.DriverName)
+	err = s.saveToFile(driverName, driverPath)
+	if err != nil {
+		logrus.Infof("err in saving %s is : %v", driverPath, err)
+	}
 
 	return s.saveToFile(data, filepath.Join(hostPath, "config.json"))
 }
@@ -126,6 +134,8 @@ func (s Filestore) loadConfig(h *types.Host) error {
 func (s Filestore) Load(name string) (*types.Host, error) {
 	hostPath := filepath.Join(s.GetMachinesDir(), name)
 
+	logrus.Infof("hostpath :%s", hostPath)
+
 	if _, err := os.Stat(hostPath); os.IsNotExist(err) {
 		return nil, mcnerror.ErrHostDoesNotExist{
 			Name: name,
@@ -136,9 +146,26 @@ func (s Filestore) Load(name string) (*types.Host, error) {
 		Name: name,
 	}
 
+	// found the driver name, and init the driver based on the drivername
+	if data, err := ioutil.ReadFile(filepath.Join(s.GetMachinesDir(), host.Name, "cloudDriver")); err != nil {
+		return nil, err
+	} else {
+		host.DriverName = strings.TrimSpace(string(data))
+		if driver, err := helpers.InitEmptyDriver(host.DriverName, name, s.Path); err == nil {
+			host.Driver = driver
+		} else {
+			return nil, err
+		}
+	}
+
 	if err := s.loadConfig(host); err != nil {
 		return nil, err
 	}
 
 	return host, nil
+}
+
+func (s Filestore) Remove(name string) error {
+	hostPath := filepath.Join(s.GetMachinesDir(), name)
+	return os.RemoveAll(hostPath)
 }

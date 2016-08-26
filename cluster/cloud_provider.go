@@ -11,7 +11,7 @@ func initProivder(provider, clusterType string) cloudprovider.CloudInterface {
 	providerFunc := providerFuncMap[provider][clusterType]
 
 	if providerFunc == nil {
-		logrus.Infof("Not able to find provider %s for %s", provider, clusterType)
+		logrus.Infof("Not able to find provider %s for %s, ignore it...", provider, clusterType)
 		return nil
 	}
 

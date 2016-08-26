@@ -1,14 +1,13 @@
 package main
 
 import (
-	"bytes"
-	"io/ioutil"
 	"os"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/cheyang/fog/cluster"
-	"github.com/cheyang/fog/types"
-	"github.com/cheyang/fog/util/yaml"
+	"github.com/cheyang/fog/cmd/fogctl/create"
+	"github.com/cheyang/fog/cmd/fogctl/list"
+	"github.com/cheyang/fog/cmd/fogctl/remove"
+	"github.com/cheyang/fog/cmd/fogctl/update"
 	"github.com/spf13/cobra"
 )
 
@@ -24,35 +23,18 @@ func main() {
 
 var mainCmd = &cobra.Command{
 	Use:          os.Args[0],
-	Short:        "Run the raw control command!",
+	Short:        "control a cluster!",
 	SilenceUsage: true,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		configFile, err := cmd.Flags().GetString("config-file")
-		if err != nil {
-			return err
-		}
-
-		// read and parse the config file
-		spec := types.Spec{}
-		if _, err := os.Stat(configFile); os.IsNotExist(err) {
-			return err
-		}
-		data, err := ioutil.ReadFile(configFile)
-		if err != nil {
-			return err
-		}
-		decoder := yaml.NewYAMLToJSONDecoder(bytes.NewReader(data))
-		err = decoder.Decode(&spec)
-		if err != nil {
-			return err
-		}
-
-		return cluster.Bootstrap(spec)
-
-	},
 }
 
 func init() {
-	mainCmd.Flags().StringP("config-file", "c", "", "The config file")
-	mainCmd.Flags().StringP("volume", "v", "", "[host-src:]container-dest[:<options>]: Bind mount a volume.")
+	mainCmd.PersistentFlags().StringP("config-file", "c", "", "The config file")
+	mainCmd.PersistentFlags().StringP("volume", "v", "", "[host-src:]container-dest[:<options>]: Bind mount a volume.")
+
+	mainCmd.AddCommand(
+		create.Cmd,
+		update.Cmd,
+		remove.Cmd,
+		list.Cmd,
+	)
 }

@@ -1,4 +1,4 @@
-package host
+package helpers
 
 import "github.com/docker/machine/libmachine/drivers"
 

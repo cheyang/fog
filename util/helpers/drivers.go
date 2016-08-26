@@ -1,4 +1,4 @@
-package host
+package helpers
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ var initFuncMaps = map[string]func(hostname, storePath string) drivers.Driver{
 	"openstack": openstack.NewDriver,
 }
 
-func initDrivers(driverName string, hostConfig types.VMSpec, storePath string) (drivers.Driver, error) {
+func InitDrivers(driverName string, hostConfig types.VMSpec, storePath string) (drivers.Driver, error) {
 
 	driverFunc, found := initFuncMaps[driverName]
 	if !found {
@@ -28,6 +28,16 @@ func initDrivers(driverName string, hostConfig types.VMSpec, storePath string) (
 	props := hostConfig.Properties
 	opts := NewConfigFlagger(props)
 	d.SetConfigFromFlags(opts)
+
+	return d, nil
+}
+
+func InitEmptyDriver(driverName, name, storePath string) (drivers.Driver, error) {
+	driverFunc, found := initFuncMaps[driverName]
+	if !found {
+		return nil, fmt.Errorf("Driver %s is not found.", driverName)
+	}
+	d := driverFunc(name, storePath)
 
 	return d, nil
 }

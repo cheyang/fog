@@ -28,6 +28,9 @@ func (this *HostHandler) create() {
 	myHost.Name = this.Name
 	myHost.Roles = this.VMSpec.Roles
 	myHost.Driver = this.Driver
+	myHost.DriverName = this.VMSpec.CloudDriverName
+	myHost.VMSpec = this.VMSpec
+	myHost.TemplateName = this.VMSpec.TemplateName
 
 	// store to path
 	storage := persist.NewFilestore(storePath)

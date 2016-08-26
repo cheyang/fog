@@ -13,7 +13,7 @@ type Spec struct {
 	Properties      map[string]interface{} `json:"Properties,omitempty"`
 	Run             container.Config       `json:"Run"`
 	CloudDriverName string                 `json:"Driver"`
-	Update          bool                   `json:"Update"` // Update an exist cluster?
+	Update          bool                   `json:"Update"` // Update an exist cluster, by default it's false.
 }
 
 type VMSpec struct {
@@ -22,6 +22,7 @@ type VMSpec struct {
 	Properties      map[string]interface{} `json:"Properties,omitempty"`
 	CloudDriverName string                 `json:"Driver"`
 	Instances       int                    `json:"Instances,omitempty"`
+	TemplateName    string                 `json:"TemplateName,omitempty"` // This value doesn't need to be set by user
 }
 
 type Host struct {
@@ -33,6 +34,8 @@ type Host struct {
 	SSHKeyPath  string
 	Roles       []string
 	State       state.State
+	DriverName  string
 	VMSpec
-	Driver drivers.Driver
+	Driver       drivers.Driver
+	TemplateName string
 }
