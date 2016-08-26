@@ -21,6 +21,17 @@ func Validate(specs Spec) error {
 		return fmt.Errorf("cluster name is not specified")
 	}
 
+	if err := validateMap(specs.Properties); err != nil {
+		return err
+	}
+	for _, vmSpec := range specs.VMSpecs {
+		if err := validateMap(vmSpec.Properties); err != nil {
+			return err
+		}
+	}
+}
+
+func validateMap(props map[string]interface{}) error {
 	for _, v := range specs.Properties {
 		logrus.Infof("The type %s of value %s", reflect.TypeOf(v), reflect.ValueOf(v))
 		switch v.(type) {
