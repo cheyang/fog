@@ -26,7 +26,13 @@ func (this ConfigFlagger) StringSlice(key string) []string {
 
 func (this ConfigFlagger) Int(key string) int {
 	if value, ok := this.Data[key]; ok {
-		return value.(int)
+		// return value.(int)
+		switch value.(type) {
+		case int:
+			return value.(int)
+		case float64:
+			return int(value.(float64))
+		}
 	}
 	return 0
 }

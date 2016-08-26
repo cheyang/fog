@@ -31,6 +31,13 @@ func (this *HostHandler) create() {
 	storage := persist.NewFilestore(storePath)
 	storage.CreateStorePath(this.Name)
 
+	defer func() {
+		err := storage.Save(&myHost)
+		if err != nil {
+			log.Warnf("Error in saving to file store %s: %s ", this.Name, err)
+		}
+	}()
+
 	// pre-check
 	log.Infof("Running pre-create checks for  %s...\n", this.Name)
 
@@ -101,10 +108,6 @@ func (this *HostHandler) create() {
 		log.Warnf("Failed to create host %s: %s\n", this.Name, myHost.Err)
 	}
 
-	err := storage.Save(&myHost)
-	if err != nil {
-		log.Warnf("Error in saving to file store %s: %s ", this.Name, err)
-	}
 	// put myHost the createBus
 	this.createBus <- myHost
 

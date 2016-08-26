@@ -29,18 +29,21 @@ func Validate(specs Spec) error {
 			return err
 		}
 	}
+
+	return nil
 }
 
 func validateMap(props map[string]interface{}) error {
-	for _, v := range specs.Properties {
-		logrus.Infof("The type %s of value %s", reflect.TypeOf(v), reflect.ValueOf(v))
+	for k, v := range props {
+		logrus.Debugf("The type %s of value %s, and its key is ", reflect.TypeOf(v), reflect.ValueOf(v))
 		switch v.(type) {
 		case string:
 		case []string:
 		case int:
 		case bool:
+		case float64:
 		default:
-			return fmt.Errorf("The type %s of value %s", reflect.TypeOf(v), reflect.ValueOf(v))
+			return fmt.Errorf("The type %s of value %s, and its key is %s", reflect.TypeOf(v), reflect.ValueOf(v), k)
 		}
 	}
 
