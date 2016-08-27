@@ -182,11 +182,7 @@ func (s Filestore) Remove(name string) error {
 
 func (s Filestore) SaveSpec(specs *types.Spec) error {
 
-	specPath := filepath.Join(s.GetMachinesDir(), "spec.json")
-	if err := os.MkdirAll(specPath, 0700); err != nil {
-		return err
-	}
-
+	specPath := filepath.Join(s.Path, "spec.json")
 	output, err := json.MarshalIndent(specs, "", "    ")
 	if err != nil {
 		//fmt.Println("Error marshalling to JSON:", err)
@@ -205,7 +201,7 @@ func (s Filestore) SaveSpec(specs *types.Spec) error {
 func (s Filestore) LoadSpec() (*types.Spec, error) {
 	spec := &types.Spec{}
 
-	data, err := ioutil.ReadFile(filepath.Join(s.GetMachinesDir(), "spec.json"))
+	data, err := ioutil.ReadFile(filepath.Join(s.Path, "spec.json"))
 	if err != nil {
 		return spec, err
 	}
