@@ -8,20 +8,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestbuildScaleList(t *testing.T) {
+func TestBuildScaleList(t *testing.T) {
 	hostList := buildMockHostList()
-	desireMap := buildDesireMap()
+	desiredMap := buildDesireMap()
 	spec := buildSpec()
 
 	runningMap := make(map[string]types.VMSpec)
 	for _, vmSpec := range spec.VMSpecs {
 		runningMap[vmSpec.Name] = vmSpec
 	}
-	currentHostMap := buildMockHostList(hostList, runningMap)
+	currentHostMap := buildcurrentHostMap(hostList, runningMap)
 	desiredHostMap := make(map[string]desiredConfig)
 	for name, _ := range desiredMap {
 		if _, found := runningMap[name]; !found {
-			assert.Error(t, err)
+			assert.Equal(t, false, found, "Not found the spec")
 		}
 
 		desiredHostMap[name] = desiredConfig{
@@ -29,7 +29,9 @@ func TestbuildScaleList(t *testing.T) {
 			instances: desiredMap[name],
 		}
 	}
-	buildScaleList(currentHostMap, desiredHostMap)
+	toRemoveHosts, toCreateHostSpecs, err := buildScaleList(currentHostMap, desiredHostMap)
+
+	assert.NoError(t, err)
 
 	fmt.Println(toRemoveHosts)
 	fmt.Println(toCreateHostSpecs)
@@ -38,19 +40,19 @@ func TestbuildScaleList(t *testing.T) {
 func buildMockHostList() []*types.Host {
 	return []*types.Host{
 		&types.Host{
-			Name: "master-0",
+			Name: "master-2",
 		},
 		&types.Host{
 			Name: "master-1",
 		},
 		&types.Host{
-			Name: "master-2",
-		},
-		&types.Host{
-			Name: "slave-0",
+			Name: "master-0",
 		},
 		&types.Host{
 			Name: "slave-1",
+		},
+		&types.Host{
+			Name: "slave-0",
 		},
 		&types.Host{
 			Name: "slave-2",
@@ -87,6 +89,6 @@ func buildDesireMap() map[string]int {
 	return map[string]int{
 		"master":   1,
 		"slave":    5,
-		"registry": 3,
+		"registry": 0,
 	}
 }

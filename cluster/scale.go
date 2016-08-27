@@ -6,13 +6,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
-)
-
-var (
-	toRemoveHosts     = make([]string, 0)
-	toCreateHostSpecs = make([]types.VMSpec, 0)
 )
 
 type desiredConfig struct {
@@ -53,7 +49,8 @@ func Scale(s persist.Store, desiredMap map[string]int) error {
 
 	currentHostMap := buildcurrentHostMap(hostList, runningMap)
 
-	err = buildScaleList(currentHostMap, desiredHostMap)
+	_, _, err = buildScaleList(currentHostMap, desiredHostMap)
+	// toRemoveHosts, toCreateHostSpecs, err := buildScaleList(currentHostMap, desiredHostMap)
 	if err != nil {
 		return err
 	}
@@ -61,7 +58,12 @@ func Scale(s persist.Store, desiredMap map[string]int) error {
 	return nil
 }
 
-func buildScaleList(currentHostMap map[string][]string, desiredHostMap map[string]desiredConfig) error {
+func buildScaleList(currentHostMap map[string][]string, desiredHostMap map[string]desiredConfig) ([]string, []types.VMSpec, error) {
+	var (
+		toRemoveHosts     = make([]string, 0)
+		toCreateHostSpecs = make([]types.VMSpec, 0)
+	)
+
 	for name, desired := range desiredHostMap {
 		desiredNum := desired.instances
 		runningNum := len(currentHostMap[name])
@@ -73,8 +75,11 @@ func buildScaleList(currentHostMap map[string][]string, desiredHostMap map[strin
 			}
 		} else if runningNum < desiredNum {
 			//scale out
-			maxNum, err := strconv.Atoi(currentHostMap[name][len(currentHostMap[name])-1])
-			return err
+			s := strings.Split(currentHostMap[name][len(currentHostMap[name])-1], "-")
+			maxNum, err := strconv.Atoi(s[len(s)-1])
+			if err != nil {
+				return toRemoveHosts, toCreateHostSpecs, err
+			}
 			for i := maxNum + 1; i < desiredNum; i++ {
 				vm := desired.vmSpec
 				vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
@@ -83,7 +88,7 @@ func buildScaleList(currentHostMap map[string][]string, desiredHostMap map[strin
 		}
 	}
 
-	return nil
+	return toRemoveHosts, toCreateHostSpecs, nil
 }
 
 // Get the name list
@@ -102,9 +107,10 @@ func buildcurrentHostMap(hosts []*types.Host, runningMap map[string]types.VMSpec
 		}
 	}
 
-	for k, v := range currentHostMap {
+	for _, v := range currentHostMap {
+		// logrus.Infof("key: %s value: %+v", k, currentHostMap[k])
 		sort.Sort(ByName(v))
-		currentHostMap[k] = v
+		// logrus.Infof("key: %s value: %+v", k, currentHostMap[k])
 	}
 
 	return
@@ -119,7 +125,13 @@ func (s ByName) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 func (s ByName) Less(i, j int) bool {
-	si, _ := strconv.Atoi(strings.Split(s[i], "-")[len(strings.Split(s[i], "-"))-1])
-	sj, _ := strconv.Atoi(strings.Split(s[j], "-")[len(strings.Split(s[j], "-"))-1])
+	si, err := strconv.Atoi(strings.Split(s[i], "-")[len(strings.Split(s[i], "-"))-1])
+	if err != nil {
+		logrus.Infof("err: %v", err)
+	}
+	sj, err := strconv.Atoi(strings.Split(s[j], "-")[len(strings.Split(s[j], "-"))-1])
+	if err != nil {
+		logrus.Infof("err: %v", err)
+	}
 	return si < sj
 }
