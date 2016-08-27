@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -55,7 +54,7 @@ var (
 			if _, err := os.Stat(storePath); os.IsNotExist(err) {
 				return fmt.Errorf("Failed to find the storage of cluster %s in %s",
 					name,
-					filepath.Join(pwd, ".fog"))
+					storePath)
 			}
 
 			storage := persist.NewFilestore(storePath)
