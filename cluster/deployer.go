@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util"
@@ -24,18 +28,9 @@ type ansibleDeployer struct {
 
 func (this ansibleDeployer) Run() error {
 
-	for k, hosts := range this.roleMap {
-		fmt.Printf("[%s]\n", k)
-
-		for _, h := range hosts {
-			fmt.Printf("%s ansible_host=%s ansible_user=%s ansible_ssh_private_key_file=%s",
-				h.Name,
-				h.SSHHostname,
-				h.SSHUserName,
-				h.SSHKeyPath)
-		}
-
-		fmt.Println("")
+	inventoryFile, err := createInventoryFile()
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -58,17 +53,21 @@ func (this *ansibleDeployer) SetHosts(hosts []types.Host) {
 		}
 
 	}
+
+	for _, value := range this.roleMap {
+		sort.Sort(byHostName(value))
+	}
 }
 
 func (this *ansibleDeployer) createInventoryFile() (path string, err error) {
 	storePath, err := util.GetStorePath(this.name)
 	if err != nil {
-		return
+		return path, err
 	}
 	storage := persist.NewFilestore(storePath)
 	err = storage.CreateDeploymentDir()
 	if err != nil {
-		return
+		return path, err
 	}
 
 	deploymentDir := storage.GetDeploymentDir()
@@ -80,7 +79,7 @@ func (this *ansibleDeployer) createInventoryFile() (path string, err error) {
 	for k, hosts := range this.roleMap {
 		_, err = w.WriteString(fmt.Sprintf("[%s]\n", k))
 		if err != nil {
-			return
+			return path, err
 		}
 
 		for _, h := range hosts {
@@ -90,15 +89,51 @@ func (this *ansibleDeployer) createInventoryFile() (path string, err error) {
 				h.SSHUserName,
 				h.SSHKeyPath))
 			if err != nil {
-				return
+				return path, err
 			}
 		}
 
 		_, err = w.WriteString("\n")
 		if err != nil {
-			return
+			return path, err
+		}
+
+		if this.name != "" {
+			_, err = w.WriteString(fmt.Sprintf("[%s:children]\n", this.name))
+			if err != nil {
+				return path, err
+			}
+
+			for k, _ := range this.roleMap {
+				_, err := w.WriteString(k)
+				if err != nil {
+					return path, err
+				}
+			}
 		}
 	}
 
-	return
+	return path, err
+}
+
+type byHostName []types.Host
+
+func (s byHostName) Len() int {
+	return len(s)
+}
+func (s byHostName) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s byHostName) Less(i, j int) bool {
+	sai := strings.Split(s[i].Name, "-")
+	si, err := strconv.Atoi(sai[len(sai)-1])
+	if err != nil {
+		logrus.Infof("err: %v", err)
+	}
+	saj := strings.Split(s[j].Name, "-")
+	sj, err := strconv.Atoi(saj[len(saj)-1])
+	if err != nil {
+		logrus.Infof("err: %v", err)
+	}
+	return si < sj
 }
