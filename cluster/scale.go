@@ -49,7 +49,7 @@ func Scale(s persist.Store, desiredMap map[string]int) error {
 
 	currentHostMap := buildcurrentHostMap(hostList, runningMap)
 
-	toRemoveHosts, toCreateHostSpecs, err = buildScaleList(currentHostMap, desiredHostMap)
+	toRemoveHosts, toCreateHostSpecs, err := buildScaleList(currentHostMap, desiredHostMap)
 	if err != nil {
 		return err
 	}
