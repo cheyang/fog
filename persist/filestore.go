@@ -183,6 +183,9 @@ func (s Filestore) Remove(name string) error {
 func (s Filestore) SaveSpec(specs *types.Spec) error {
 
 	specPath := filepath.Join(s.GetMachinesDir(), "spec.json")
+	if err := os.MkdirAll(specPath, 0700); err != nil {
+		return err
+	}
 
 	output, err := json.MarshalIndent(specs, "", "    ")
 	if err != nil {
