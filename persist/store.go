@@ -23,6 +23,10 @@ type Store interface {
 
 	// create the store path
 	CreateStorePath(name string) error
+
+	SaveSpec(specs *types.Spec) error
+
+	LoadSpec() (*types.Spec, error)
 }
 
 func LoadHosts(s Store, hostNames []string) ([]*types.Host, map[string]error) {

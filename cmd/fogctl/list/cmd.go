@@ -26,6 +26,7 @@ var (
 			}
 
 			for _, name := range args {
+
 				pwd, err := os.Getwd()
 				if err != nil {
 					return err

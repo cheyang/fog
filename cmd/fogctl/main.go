@@ -7,7 +7,7 @@ import (
 	"github.com/cheyang/fog/cmd/fogctl/create"
 	"github.com/cheyang/fog/cmd/fogctl/list"
 	"github.com/cheyang/fog/cmd/fogctl/remove"
-	"github.com/cheyang/fog/cmd/fogctl/update"
+	"github.com/cheyang/fog/cmd/fogctl/scale"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ func init() {
 
 	mainCmd.AddCommand(
 		create.Cmd,
-		update.Cmd,
+		scale.Cmd,
 		remove.Cmd,
 		list.Cmd,
 	)

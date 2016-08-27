@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/helpers"
 )
@@ -69,6 +70,9 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 		return vmSpecs, err
 	}
 
+	storage := persist.NewFilestore(storePath)
+	storage.SaveSpec(&specs)
+
 	dup := make(map[string]bool)
 	for _, vmSpec := range specs.VMSpecs {
 
@@ -90,7 +94,6 @@ func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
 		for i := 0; i < vmSpec.Instances; i++ {
 			vm := vmSpec
 			vm.Name = fmt.Sprintf("%s-%d", vm.Name, i)
-			vm.TemplateName = vm.Name
 			vm.Properties = mergeProperties(specs.Properties, vm.Properties)
 			if len(vm.Roles) == 0 {
 				return vmSpecs, fmt.Errorf("please specify the role of %s", vmSpec.Name)

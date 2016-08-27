@@ -169,3 +169,39 @@ func (s Filestore) Remove(name string) error {
 	hostPath := filepath.Join(s.GetMachinesDir(), name)
 	return os.RemoveAll(hostPath)
 }
+
+func (s Filestore) SaveSpec(specs *types.Spec) error {
+
+	specPath := filepath.Join(s.GetMachinesDir(), "spec.json")
+
+	output, err := json.MarshalIndent(specs, "", "    ")
+	if err != nil {
+		//fmt.Println("Error marshalling to JSON:", err)
+		logrus.Infoln("Error marshalling to JSON:", err)
+		return err
+	}
+	err = ioutil.WriteFile(specPath, output, 0600)
+	if err != nil {
+		//fmt.Println("Error writing JSON to file:", err)
+		logrus.Infoln("Error writing JSON to file:", err)
+		return err
+	}
+	return nil
+}
+
+func (s Filestore) LoadSpec() (*types.Spec, error) {
+	spec := &types.Spec{}
+
+	data, err := ioutil.ReadFile(filepath.Join(s.GetMachinesDir(), "spec.json"))
+	if err != nil {
+		return spec, err
+	}
+
+	err = json.Unmarshal(data, spec)
+	if err != nil {
+		return spec, err
+	}
+
+	return spec, nil
+
+}

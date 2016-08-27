@@ -22,7 +22,6 @@ type VMSpec struct {
 	Properties      map[string]interface{} `json:"Properties,omitempty"`
 	CloudDriverName string                 `json:"Driver"`
 	Instances       int                    `json:"Instances,omitempty"`
-	TemplateName    string                 `json:"TemplateName,omitempty"` // This value doesn't need to be set by user
 }
 
 type Host struct {

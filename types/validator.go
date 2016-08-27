@@ -28,6 +28,10 @@ func Validate(specs Spec) error {
 		if err := validateMap(vmSpec.Properties); err != nil {
 			return err
 		}
+
+		if vmSpec.Instances < 1 {
+			return fmt.Errorf("the instances %d of %s is not specified", vmSpec.Instances, vmSpec.Name)
+		}
 	}
 
 	return nil
