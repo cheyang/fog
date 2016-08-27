@@ -44,7 +44,8 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 }
 
 func createStorePath(specs types.Spec) error {
-	storePath, err := util.GetStorePath(specs.Name)
+	var err error
+	storePath, err = util.GetStorePath(specs.Name)
 	if err != nil {
 		return err
 	}
