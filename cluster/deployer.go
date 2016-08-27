@@ -28,7 +28,7 @@ type ansibleDeployer struct {
 
 func (this ansibleDeployer) Run() error {
 
-	inventoryFile, err := createInventoryFile()
+	inventoryFile, err := this.createInventoryFile()
 	if err != nil {
 		return err
 	}
