@@ -54,8 +54,8 @@ func Scale(s persist.Store, desiredMap map[string]int) error {
 		return err
 	}
 	// toRemoveHosts, toCreateHostSpecs, err := buildScaleList(currentHostMap, desiredHostMap)
-	logrus.Infof("toRemoveHost: %v", toRemoveHosts)
-	logrus.Infof("toCreateHostSpecs: %v", toCreateHostSpecs)
+	logrus.Infof("toRemoveHost: %v\n", toRemoveHosts)
+	logrus.Infof("toCreateHostSpecs: %v\n", toCreateHostSpecs)
 
 	return nil
 }
