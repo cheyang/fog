@@ -32,6 +32,7 @@ func (this ansibleDeployer) Run() error {
 	if err != nil {
 		return err
 	}
+	logrus.Infof("inventory file: %s\n", inventoryFile)
 
 	return nil
 }
