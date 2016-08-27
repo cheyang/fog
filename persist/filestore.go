@@ -27,14 +27,24 @@ func (s Filestore) GetMachinesDir() string {
 	return filepath.Join(s.Path, "machines")
 }
 
+func (s Filestore) GetDeploymentDir() string {
+	return filepath.Join(s.Path, "deploymnent")
+}
+
+func (s Filestore) CreateDeploymentDir() error {
+	dir := filepath.Join(s.Path, "deploymnent")
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s Filestore) CreateStorePath(name string) error {
 	hostPath := filepath.Join(s.GetMachinesDir(), name)
-
 	// Ensure that the directory we want to save to exists.
 	if err := os.MkdirAll(hostPath, 0700); err != nil {
 		return err
 	}
-
 	return nil
 }
 

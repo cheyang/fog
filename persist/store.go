@@ -24,6 +24,10 @@ type Store interface {
 	// create the store path
 	CreateStorePath(name string) error
 
+	CreateDeploymentDir() error
+
+	GetDeploymentDir() string
+
 	SaveSpec(specs *types.Spec) error
 
 	LoadSpec() (*types.Spec, error)

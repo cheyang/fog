@@ -10,6 +10,7 @@ import (
 
 	"github.com/cheyang/fog/cluster"
 	"github.com/cheyang/fog/persist"
+	"github.com/cheyang/fog/util"
 	"github.com/spf13/cobra"
 )
 
@@ -46,11 +47,10 @@ var (
 				}
 			}
 
-			pwd, err := os.Getwd()
+			storePath, err := util.GetStorePath(name)
 			if err != nil {
 				return err
 			}
-			storePath := filepath.Join(pwd, ".fog", name)
 
 			if _, err := os.Stat(storePath); os.IsNotExist(err) {
 				return fmt.Errorf("Failed to find the storage of cluster %s in %s",

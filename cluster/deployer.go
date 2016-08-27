@@ -1,9 +1,14 @@
 package cluster
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"path/filepath"
 
+	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
+	"github.com/cheyang/fog/util"
 )
 
 type Deployer interface {
@@ -12,6 +17,7 @@ type Deployer interface {
 }
 
 type ansibleDeployer struct {
+	name    string
 	hosts   []types.Host
 	roleMap map[string][]types.Host
 }
@@ -52,4 +58,47 @@ func (this *ansibleDeployer) SetHosts(hosts []types.Host) {
 		}
 
 	}
+}
+
+func (this *ansibleDeployer) createInventoryFile() (path string, err error) {
+	storePath, err := util.GetStorePath(this.name)
+	if err != nil {
+		return
+	}
+	storage := persist.NewFilestore(storePath)
+	err = storage.CreateDeploymentDir()
+	if err != nil {
+		return
+	}
+
+	deploymentDir := storage.GetDeploymentDir()
+	f, err := os.Create(filepath.Join(deploymentDir, "inventory"))
+	defer f.Close()
+
+	w := bufio.NewWriter(f)
+	defer w.Flush()
+	for k, hosts := range this.roleMap {
+		_, err = w.WriteString(fmt.Sprintf("[%s]\n", k))
+		if err != nil {
+			return
+		}
+
+		for _, h := range hosts {
+			_, err = w.WriteString(fmt.Sprintf("%s ansible_host=%s ansible_user=%s ansible_ssh_private_key_file=%s\n",
+				h.Name,
+				h.SSHHostname,
+				h.SSHUserName,
+				h.SSHKeyPath))
+			if err != nil {
+				return
+			}
+		}
+
+		_, err = w.WriteString("\n")
+		if err != nil {
+			return
+		}
+	}
+
+	return
 }

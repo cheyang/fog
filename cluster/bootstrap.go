@@ -49,7 +49,7 @@ func Bootstrap(spec types.Spec) error {
 		cp.Configure() // configure infrastructure
 	}
 
-	var deployer Deployer = &ansibleDeployer{}
+	var deployer Deployer = &ansibleDeployer{name: spec.Name}
 	deployer.SetHosts(hosts)
 	deployer.Run()
 

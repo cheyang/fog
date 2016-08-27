@@ -3,10 +3,10 @@ package host
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
+	"github.com/cheyang/fog/util"
 	"github.com/cheyang/fog/util/helpers"
 )
 
@@ -44,10 +44,9 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 }
 
 func createStorePath(specs types.Spec) error {
-	if pwd, err := os.Getwd(); err != nil {
+	storePath, err := util.GetStorePath(specs.Name)
+	if err != nil {
 		return err
-	} else {
-		storePath = filepath.Join(pwd, ".fog", specs.Name)
 	}
 
 	// if the dir exists and not update mode
