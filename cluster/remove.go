@@ -1,11 +1,13 @@
 package cluster
 
 import (
+	"os"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/persist"
 )
 
-func Remove(s persist.Store) error {
+func Remove(storePath string, s persist.Store) error {
 
 	hostList, _, err := persist.LoadAllHosts(s)
 	if err != nil {
@@ -19,6 +21,5 @@ func Remove(s persist.Store) error {
 			logrus.Infof("host err: %v", err)
 		}
 	}
-
-	return nil
+	return os.RemoveAll(storePath)
 }
