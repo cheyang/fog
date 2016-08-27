@@ -18,7 +18,7 @@ var (
 		Use:   "scale",
 		Short: "scale out/in a cluster",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 0 {
+			if len(args) == 0 {
 				return errors.New("scale out/in command takes no arguments")
 			}
 

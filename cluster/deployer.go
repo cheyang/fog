@@ -98,18 +98,18 @@ func (this *ansibleDeployer) createInventoryFile() (path string, err error) {
 		if err != nil {
 			return path, err
 		}
+	}
 
-		if this.name != "" {
-			_, err = w.WriteString(fmt.Sprintf("[%s:children]\n", this.name))
+	if this.name != "" {
+		_, err = w.WriteString(fmt.Sprintf("[%s:children]\n", this.name))
+		if err != nil {
+			return path, err
+		}
+
+		for k, _ := range this.roleMap {
+			_, err := w.WriteString(fmt.Sprintf("%s\n", k))
 			if err != nil {
 				return path, err
-			}
-
-			for k, _ := range this.roleMap {
-				_, err := w.WriteString(k)
-				if err != nil {
-					return path, err
-				}
 			}
 		}
 	}
