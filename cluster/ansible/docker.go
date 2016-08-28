@@ -13,12 +13,11 @@ import (
 	"golang.org/x/net/context"
 )
 
-func (this *ansibleManager) startContainer() (string, error) {
+func (this *ansibleManager) startContainer() (id string, err error) {
 	ctx := context.Background()
-	var err error
 	dockerClient, err = docker_client.NewEnvClient()
 	if err != nil {
-		return err
+		return id, err
 	}
 
 	config := this.containerCreateConfig.Config
@@ -28,13 +27,13 @@ func (this *ansibleManager) startContainer() (string, error) {
 	config.Env = append(config.Env, this.genEnvsForAnsible()...)
 	resp, err := dockerClient.ContainerCreate(ctx, config, hostConfig, newtworkConfig, "")
 	if err != nil {
-		return "", err
+		return id, err
 	}
 	for _, w := range resp.Warnings {
 		logrus.Warnf("Docker create: %v\n", w)
 	}
 
-	id := resp.ID
+	id = resp.ID
 	logrus.Infof("Container ID is %s\n", id)
 	startOpt := docker.ContainerStartOptions{}
 	err = dockerClient.ContainerStart(ctx, id, startOpt)
@@ -64,10 +63,10 @@ func (this *ansibleManager) printContainerLogs(id string) error {
 	}
 
 	if c.Config.Tty {
-		_, err = io.Copy(logrus.StandardLogger(), response)
+		_, err = io.Copy(logrus.StandardLogger().Out, response)
 	} else {
-		_, err = stdcopy.StdCopy(logrus.StandardLogger(),
-			logrus.StandardLogger(),
+		_, err = stdcopy.StdCopy(logrus.StandardLogger().Out,
+			logrus.StandardLogger().Out,
 			response)
 	}
 	return err
