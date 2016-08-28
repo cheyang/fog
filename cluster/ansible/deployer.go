@@ -122,7 +122,7 @@ func (this *ansibleManager) dockerRun() error {
 	config.Env = append(config.Env, this.genEnvsForAnsible()...)
 	resp, err := dockerClient.ContainerCreate(ctx, config, hostConfig, newtworkConfig, "")
 	if err != nil {
-		return "", err
+		return err
 	}
 	for _, w := range resp.Warnings {
 		logrus.Warnf("Docker create: %v", w)
@@ -214,7 +214,7 @@ func (this *ansibleManager) genEnvsForAnsible() []string {
 
 func (this *ansibleManager) mappingKeyPath(keyPath string) string {
 	if this.containerCreateConfig != nil {
-		return strings.Replace(keyPath, this.store.GetMachineDir(), ansibleSSHkeysDir, 1)
+		return strings.Replace(keyPath, this.store.GetMachinesDir(), ansibleSSHkeysDir, 1)
 	}
 	return keyPath
 }
