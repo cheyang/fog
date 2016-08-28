@@ -3,7 +3,7 @@ package cluster
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/cluster/ansible"
-	_ "github.com/cheyang/fog/cluster/deploy"
+	"github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/dump"
