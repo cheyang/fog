@@ -10,6 +10,7 @@ import (
 	"github.com/docker/docker/pkg/stdcopy"
 	docker_client "github.com/docker/engine-api/client"
 	docker "github.com/docker/engine-api/types"
+	"github.com/docker/engine-api/types/container"
 	"golang.org/x/net/context"
 )
 
@@ -22,6 +23,9 @@ func (this *ansibleManager) startContainer() (id string, err error) {
 
 	config := this.containerCreateConfig.Config
 	hostConfig := this.containerCreateConfig.HostConfig
+	if hostConfig == nil {
+		hostConfig = &container.HostConfig{}
+	}
 	newtworkConfig := this.containerCreateConfig.NetworkingConfig
 	hostConfig.Binds = append(hostConfig.Binds, this.genBindsForAnsible()...)
 	config.Env = append(config.Env, this.genEnvsForAnsible()...)
