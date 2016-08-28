@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
+	_ "github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util"
@@ -25,12 +26,6 @@ var (
 	ansibleHostFile   = filepath.Join(ansibleEtc, "hosts")
 	ansibleSSHkeysDir = filepath.Join(ansibleEtc, "machines")
 )
-
-type Deployer interface {
-	SetHosts(hosts []types.Host)
-	SetCommander(run interface{}) error
-	Run() error
-}
 
 type ansibleManager struct {
 	name                  string

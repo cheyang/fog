@@ -50,7 +50,7 @@ func Bootstrap(spec types.Spec) error {
 		cp.Configure() // configure IaaS
 	}
 
-	var deployer Deployer = &ansible.AnsibleManager{name: spec.Name}
+	var deployer deploy.Deployer = &ansible.AnsibleManager{name: spec.Name}
 	deployer.SetHosts(hosts)
 	if len(spec.Run) > 0 {
 		deployer.SetCommander(spec.Run)
