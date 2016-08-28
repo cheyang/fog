@@ -76,9 +76,9 @@ func (this ansibleManager) Run() error {
 func (this *ansibleManager) SetCommander(cmd interface{}) error {
 	switch cmd.(type) {
 	case []string:
-		this.run = cmd
+		this.run = cmd.([]string)
 	case *docker.ContainerCreateConfig:
-		this.containerCreateConfig = cmd
+		this.containerCreateConfig = cmd.(*docker.ContainerCreateConfig)
 	default:
 		return fmt.Errorf("Unrecongized type %v", cmd)
 	}
@@ -117,9 +117,9 @@ func (this *ansibleManager) dockerRun() error {
 
 	config := this.containerCreateConfig.Config
 	hostConfig := this.containerCreateConfig.HostConfig
-	newtworkConfig := this.containerCreateConfig.NetworkConfig
+	newtworkConfig := this.containerCreateConfig.NetworkingConfig
 	hostConfig.Binds = append(hostConfig.Binds, this.genBindsForAnsible()...)
-	hostConfig.Envs = append(hostConfig.Envs, this.genEnvsForAnsible()...)
+	hostConfig.Env = append(hostConfig.Env, this.genEnvsForAnsible()...)
 	resp, err := dockerClient.ContainerCreate(ctx, config, hostConfig, newtworkConfig, "")
 	if err != nil {
 		return "", err
