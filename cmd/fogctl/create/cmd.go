@@ -58,5 +58,5 @@ var (
 
 func init() {
 	Cmd.Flags().StringP("config-file", "f", "", "The config file.")
-	Cmd.Flags().BoolP("retry", false, "retry to create cluster.")
+	Cmd.Flags().BoolP("retry", "r", false, "retry to create cluster.")
 }
