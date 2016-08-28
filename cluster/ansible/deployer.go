@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/cluster/deploy"
@@ -15,7 +14,6 @@ import (
 	"github.com/cheyang/fog/util"
 	docker_client "github.com/docker/engine-api/client"
 	docker "github.com/docker/engine-api/types"
-	"golang.org/x/net/context"
 )
 
 const ansibleEtc = "/etc/ansible"
@@ -57,9 +55,22 @@ func (this ansibleManager) Run() error {
 	logrus.Infof("inventory file: %s\n", inventoryFile)
 
 	if this.containerCreateConfig != nil {
-		err := this.dockerRun()
+		id, err := this.startContainer()
 		if err != nil {
 			return err
+		}
+		err = this.printContainerLogs(id)
+		if err != nil {
+			return err
+		}
+		c, err := this.inspectContainer(id)
+		if err != nil {
+			return err
+		}
+		if c.State.ExitCode != 0 {
+			logrus.Infof("Exit failed %v, rc is %d", c.State.Error, c.State.ExitCode)
+		} else {
+			logrus.Infoln("Exit successfully.")
 		}
 	} else {
 
@@ -101,35 +112,6 @@ func (this *ansibleManager) SetHosts(hosts []types.Host) {
 	for _, value := range this.roleMap {
 		sort.Sort(byHostName(value))
 	}
-}
-
-func (this *ansibleManager) dockerRun() error {
-	ctx := context.Background()
-	dockerClient, err := docker_client.NewEnvClient()
-	if err != nil {
-		return err
-	}
-
-	config := this.containerCreateConfig.Config
-	hostConfig := this.containerCreateConfig.HostConfig
-	newtworkConfig := this.containerCreateConfig.NetworkingConfig
-	hostConfig.Binds = append(hostConfig.Binds, this.genBindsForAnsible()...)
-	config.Env = append(config.Env, this.genEnvsForAnsible()...)
-	resp, err := dockerClient.ContainerCreate(ctx, config, hostConfig, newtworkConfig, "")
-	if err != nil {
-		return err
-	}
-	for _, w := range resp.Warnings {
-		logrus.Warnf("Docker create: %v", w)
-	}
-
-	id := resp.ID
-	options := docker.ContainerStartOptions{}
-	err = dockerClient.ContainerStart(ctx, id, options)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // create the inventory file which is used by ansible
@@ -189,27 +171,4 @@ func (this *ansibleManager) createInventoryFile() (path string, err error) {
 	}
 
 	return path, err
-}
-
-func (this *ansibleManager) genBindsForAnsible() (binds []string) {
-
-	binds = append(binds,
-		fmt.Sprintf("%s:%s:ro", filepath.Join(this.store.GetDeploymentDir(), "inventory"), ansibleHostFile),
-		fmt.Sprintf("%s:%s:ro", filepath.Join(this.store.GetMachinesDir(), ansibleSSHkeysDir)),
-	)
-
-	return binds
-}
-
-func (this *ansibleManager) genEnvsForAnsible() []string {
-	return []string{
-		"ANSIBLE_HOST_KEY_CHECKING=False",
-	}
-}
-
-func (this *ansibleManager) mappingKeyPath(keyPath string) string {
-	if this.containerCreateConfig != nil {
-		return strings.Replace(keyPath, this.store.GetMachinesDir(), ansibleSSHkeysDir, 1)
-	}
-	return keyPath
 }
