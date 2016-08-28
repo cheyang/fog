@@ -2,6 +2,7 @@ package cluster
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/cheyang/fog/cluster/ansible"
 	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/dump"
@@ -16,7 +17,7 @@ func Bootstrap(spec types.Spec) error {
 
 	logrus.Infof("spec: %+v", spec)
 
-	//register dump tool
+	//register core dump tool
 	dump.InstallCoreDumpGenerator()
 
 	bus := make(chan types.Host)
@@ -46,11 +47,17 @@ func Bootstrap(spec types.Spec) error {
 	cp := initProivder(spec.CloudDriverName, spec.ClusterType)
 	if cp != nil {
 		cp.SetHosts(hosts)
-		cp.Configure() // configure infrastructure
+		cp.Configure() // configure IaaS
 	}
 
-	var deployer Deployer = &ansibleDeployer{name: spec.Name}
+	var deployer Deployer = &ansible.AnsibleManager{name: spec.Name}
 	deployer.SetHosts(hosts)
+	if len(spec.Run) > 0 {
+		deployer.SetCommander(spec.Run)
+	} else {
+		deployer.SetCommander(spec.DockerRun)
+	}
+
 	deployer.Run()
 
 	return nil

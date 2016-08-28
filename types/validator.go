@@ -34,6 +34,14 @@ func Validate(specs Spec) error {
 		}
 	}
 
+	if len(specs.Run) > 0 && specs.DockerRun != nil {
+		return fmt.Errorf("DockerRun and Run can't be specified together")
+	}
+
+	if len(specs.Run) == 0 && specs.DockerRun == nil {
+		return fmt.Errorf("DockerRun and Run can't be empty either")
+	}
+
 	return nil
 }
 

@@ -21,6 +21,10 @@ type Store interface {
 	// Save persists a machine in the store
 	Save(host *types.Host) error
 
+	GetRoot() string
+
+	GetMachinesDir() string
+
 	// create the store path
 	CreateStorePath(name string) error
 

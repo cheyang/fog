@@ -23,6 +23,10 @@ func NewFilestore(path string) *Filestore {
 	}
 }
 
+func (s Filestore) GetRoot() string {
+	return s.Path
+}
+
 func (s Filestore) GetMachinesDir() string {
 	return filepath.Join(s.Path, "machines")
 }
