@@ -119,7 +119,7 @@ func (this *ansibleManager) dockerRun() error {
 	hostConfig := this.containerCreateConfig.HostConfig
 	newtworkConfig := this.containerCreateConfig.NetworkingConfig
 	hostConfig.Binds = append(hostConfig.Binds, this.genBindsForAnsible()...)
-	hostConfig.Env = append(hostConfig.Env, this.genEnvsForAnsible()...)
+	config.Env = append(config.Env, this.genEnvsForAnsible()...)
 	resp, err := dockerClient.ContainerCreate(ctx, config, hostConfig, newtworkConfig, "")
 	if err != nil {
 		return "", err
@@ -167,7 +167,7 @@ func (this *ansibleManager) createInventoryFile() (path string, err error) {
 				h.Name,
 				h.SSHHostname,
 				h.SSHUserName,
-				this.mappingKey(h.SSHKeyPath)))
+				this.mappingKeyPath(h.SSHKeyPath)))
 			if err != nil {
 				return path, err
 			}
@@ -214,7 +214,7 @@ func (this *ansibleManager) genEnvsForAnsible() []string {
 
 func (this *ansibleManager) mappingKeyPath(keyPath string) string {
 	if this.containerCreateConfig != nil {
-		return strings.Replace(keyPath, this.store.getMachineDir(), ansibleSSHkeysDir, 1)
+		return strings.Replace(keyPath, this.store.GetMachineDir(), ansibleSSHkeysDir, 1)
 	}
 	return keyPath
 }
