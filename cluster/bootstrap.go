@@ -51,7 +51,11 @@ func Bootstrap(spec types.Spec) error {
 		cp.Configure() // configure IaaS
 	}
 
-	var deployer deploy.Deployer = ansible.NewDeployer(spec.Name)
+	var deployer deploy.Deployer
+	deployer, err = ansible.NewDeployer(spec.Name)
+	if err != nil {
+		return err
+	}
 	deployer.SetHosts(hosts)
 	if len(spec.Run) > 0 {
 		deployer.SetCommander(spec.Run)
@@ -59,7 +63,5 @@ func Bootstrap(spec types.Spec) error {
 		deployer.SetCommander(spec.DockerRun)
 	}
 
-	deployer.Run()
-
-	return nil
+	return deployer.Run()
 }
