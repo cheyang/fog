@@ -35,7 +35,7 @@ func (this *HostHandler) createOrGet() {
 			host = this.create(storage)
 		}
 	} else {
-		host := &types.Host{
+		host = &types.Host{
 			Name: this.Name,
 			Err:  err,
 		}
