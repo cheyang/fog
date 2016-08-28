@@ -83,7 +83,7 @@ func (this *ansibleManager) genBindsForAnsible() (binds []string) {
 
 	binds = append(binds,
 		fmt.Sprintf("%s:%s:ro", filepath.Join(this.store.GetDeploymentDir(), "inventory"), ansibleHostFile),
-		fmt.Sprintf("%s:%s:ro", filepath.Join(this.store.GetMachinesDir(), ansibleSSHkeysDir)),
+		fmt.Sprintf("%s:%s:ro", this.store.GetMachinesDir(), ansibleSSHkeysDir),
 	)
 
 	return binds
