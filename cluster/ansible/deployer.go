@@ -21,9 +21,14 @@ const ansibleEtc = "/etc/ansible"
 var dockerClient *docker_client.Client
 
 var (
-	ansibleHostFile   = filepath.Join(ansibleEtc, "hosts")
-	ansibleSSHkeysDir = filepath.Join(ansibleEtc, "machines")
+	ansibleHostFile   string
+	ansibleSSHkeysDir string
 )
+
+func init() {
+	ansibleHostFile = filepath.Join(ansibleEtc, "hosts")
+	ansibleSSHkeysDir = filepath.Join(ansibleEtc, "machines")
+}
 
 type ansibleManager struct {
 	name                  string

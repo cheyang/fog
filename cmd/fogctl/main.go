@@ -29,7 +29,6 @@ var mainCmd = &cobra.Command{
 
 func init() {
 	mainCmd.PersistentFlags().StringP("config-file", "f", "", "The config file")
-	mainCmd.PersistentFlags().StringP("volume", "v", "", "[host-src:]container-dest[:<options>]: Bind mount a volume.")
 
 	mainCmd.AddCommand(
 		create.Cmd,

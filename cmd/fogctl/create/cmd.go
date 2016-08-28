@@ -45,7 +45,18 @@ var (
 				return err
 			}
 
+			retry, err := cmd.Flags().GetBool("retry")
+			if err != nil {
+				return err
+			}
+			spec.Update = retry
+
 			return cluster.Bootstrap(spec)
 		},
 	}
 )
+
+func init() {
+	Cmd.Flags().StringP("config-file", "f", "", "The config file.")
+	Cmd.Flags().BoolP("retry", false, "retry to create cluster.")
+}

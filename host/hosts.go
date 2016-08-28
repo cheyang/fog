@@ -36,7 +36,7 @@ func CreateInBatch(vmSpecs []types.VMSpec, hostBus chan<- types.Host) (err error
 			createBus: hostBus,
 		}
 
-		go h.create()
+		go h.createOrGet()
 	}
 
 	return nil
