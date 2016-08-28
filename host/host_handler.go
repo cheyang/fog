@@ -59,7 +59,7 @@ func (this *HostHandler) create(s persist.Store) *types.Host {
 	s.CreateStorePath(this.Name)
 
 	defer func() {
-		err := s.Save(&host)
+		err := s.Save(host)
 		if err != nil {
 			log.Warnf("Error in saving to file store %s: %s ", this.Name, err)
 		}
