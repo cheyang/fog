@@ -3,6 +3,7 @@ package cluster
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/cluster/ansible"
+	_ "github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util/dump"
@@ -50,7 +51,7 @@ func Bootstrap(spec types.Spec) error {
 		cp.Configure() // configure IaaS
 	}
 
-	var deployer deploy.Deployer = &ansible.AnsibleManager{name: spec.Name}
+	var deployer Deployer = ansible.NewDeployer(spec.Name)
 	deployer.SetHosts(hosts)
 	if len(spec.Run) > 0 {
 		deployer.SetCommander(spec.Run)

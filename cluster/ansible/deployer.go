@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/cheyang/fog/cluster/deploy"
+	_ "github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
 	"github.com/cheyang/fog/util"
@@ -36,7 +36,7 @@ type ansibleManager struct {
 	store                 persist.Store
 }
 
-func NewDeployer(name string) (deploy.Deployer, error) {
+func NewDeployer(name string) (Deployer, error) {
 	storePath, err := util.GetStorePath(name)
 	if err != nil {
 		return nil, err
