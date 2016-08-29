@@ -146,7 +146,8 @@ func (this *ansibleManager) createInventoryFile() (path string, err error) {
 
 		for _, h := range hosts {
 			_, err = w.WriteString(fmt.Sprintf("%s ansible_host=%s ansible_user=%s ansible_ssh_private_key_file=%s\n",
-				h.Name,
+				// h.Name,
+				h.SSHHostname,
 				h.SSHHostname,
 				h.SSHUserName,
 				this.mappingKeyPath(h.SSHKeyPath)))

@@ -17,10 +17,6 @@ var (
 		Use:   "create",
 		Short: "Create a cluster",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 0 {
-				return errors.New("create command takes no arguments")
-			}
-
 			if !cmd.Flags().Changed("config-file") {
 				return errors.New("--config-file are mandatory")
 			}

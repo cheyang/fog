@@ -37,7 +37,6 @@ var (
 						storePath)
 				}
 				storage := persist.NewFilestore(storePath)
-
 				err = cluster.Remove(storePath, storage)
 
 				if err != nil {
