@@ -51,6 +51,7 @@ func validateMap(props map[string]interface{}) error {
 		switch v.(type) {
 		case string:
 		case []string:
+		case []interface{}:
 		case int:
 		case bool:
 		case float64:
