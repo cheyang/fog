@@ -56,6 +56,11 @@
 			"Rev": "b1b100cf011b037b8821e8d0ae4f5ab3e2222c48"
 		},
 		{
+			"ImportPath": "github.com/docker/docker/pkg/stdcopy",
+			"Comment": "v1.5.0",
+			"Rev": "a8a31eff10544860d2188dddabdee4d727545796"
+		},
+		{
 			"ImportPath": "github.com/docker/docker/pkg/term",
 			"Comment": "v1.5.0",
 			"Rev": "a8a31eff10544860d2188dddabdee4d727545796"
