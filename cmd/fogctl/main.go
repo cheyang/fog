@@ -29,7 +29,7 @@ var mainCmd = &cobra.Command{
 	SilenceUsage: true,
 	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 
-		flag, err := cmd.PersistentFlags().GetString("log-level")
+		flag, err := cmd.Flags().GetString("log-level")
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
@@ -41,7 +41,7 @@ var mainCmd = &cobra.Command{
 		}
 		logrus.SetLevel(level)
 
-		debugFlag, err := cmd.PersistentFlags().GetBool("debug-docker-machine")
+		debugFlag, err := cmd.Flags().GetBool("debug-docker-machine")
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
