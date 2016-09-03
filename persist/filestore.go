@@ -162,18 +162,18 @@ func (s Filestore) Load(name string) (*types.Host, error) {
 
 	// found the driver name, and init the driver based on the drivername
 	if data, err := ioutil.ReadFile(filepath.Join(s.GetMachinesDir(), host.Name, "cloudDriver")); err != nil {
-		return nil, err
+		return host, err
 	} else {
 		host.DriverName = strings.TrimSpace(string(data))
 		if driver, err := helpers.InitEmptyDriver(host.DriverName, name, s.Path); err == nil {
 			host.Driver = driver
 		} else {
-			return nil, err
+			return host, err
 		}
 	}
 
 	if err := s.loadConfig(host); err != nil {
-		return nil, err
+		return host, err
 	}
 
 	return host, nil

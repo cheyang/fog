@@ -23,7 +23,6 @@ Properties:
   aliyunecs-region: cn-hongkong
   aliyunecs-security-group: k8s
   aliyunecs-system-disk-category: cloud_efficiency
-  aliyunecs-zone: cn-hongkong-b
 Vmspecs: 
   - 
     Instances: 1
