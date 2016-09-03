@@ -19,7 +19,19 @@ func (this ConfigFlagger) String(key string) string {
 
 func (this ConfigFlagger) StringSlice(key string) []string {
 	if value, ok := this.Data[key]; ok {
-		return value.([]string)
+		// return value.([]string)
+		switch value.(type) {
+		case []string:
+			return value.([]string)
+		case []interface{}:
+			// interface slice
+			is := value.([]interface{})
+			// string slice
+			ss := []string{}
+			for _, v := range is {
+				ss = append(ss, v.(string))
+			}
+		}
 	}
 	return []string{}
 }
