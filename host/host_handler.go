@@ -149,7 +149,7 @@ func (this *HostHandler) get(s persist.Store) *types.Host {
 	}
 	if host.SSHUserName == "" {
 		host.Err = fmt.Errorf("SSHUserName is empty")
-		return
+		return host
 	}
 
 	log.Infof("Waiting for machine to be running, this may take a few minutes %s...\n", host.Name)
