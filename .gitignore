@@ -1,2 +1,2 @@
-**/*.yml
+util/**/*.yml
 .DS_Store

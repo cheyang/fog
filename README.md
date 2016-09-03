@@ -17,14 +17,14 @@ docker machine + golang + ansible + docker
 
 使用docker machine的原因是它提供了一套标准的创建虚机并且用ssh连接到虚机进行工作的API接口，并且有一大群云厂商提供了SPI的实现，并且负责维护，这就可以重用docker社区在IAAS层标准化的工作。并且这些厂商都在docker machine的实现上提供了专业的优化，也是我们可以重用的部分。
 
-使用golang的原因
-1） docker machine的类库是golang实现
-2) 单独的binary容易部署
+使用golang的原因  
+1） docker machine的类库是golang实现  
+2) 单独的binary容易部署  
 
-使用ansible的原因
-1) ansible agent less的架构非常适合部署配置比较简单的docker集群
-2) offical的playbook支持保证最专业的部署, k8s,mesos对playbook的支持都是最全面的
-3) 强大的社区支持
+使用ansible的原因  
+1) ansible agent less的架构非常适合部署配置比较简单的docker集群  
+2) offical的playbook支持保证最专业的部署, k8s,mesos对playbook的支持都是最全面的  
+3) 强大的社区支持  
 
 使用docker
 

@@ -1,0 +1,44 @@
+---
+Vmspecs:
+  -
+    Name: kube-master
+    Roles:
+      - masters
+      - etcd
+    Instances: 1
+    Properties:
+      aliyunecs-description: kube-master,etcd
+      aliyunecs-tag: kube-master
+  -
+    Name: kube-slave
+    roles:
+      - nodes
+    Instances: 2
+    Properties:
+      aliyunecs-description: kube-slave
+      aliyunecs-tag: kube-slave
+ClusterName: mycluster
+Driver: aliyun
+ClusterType: k8s
+DockerRun:
+  Config:
+    Image: cheyang/k8s-ansible:on-build
+    Cmd:
+      - ./deploy-cluster.sh
+    Env:
+      - ANSIBLE_HOST_KEY_CHECKING=False
+    Tty: true
+  HostConfig:
+    Binds:
+      - /root/ansible.yml:/etc/ansible/group_vars/mycluster.yml
+Properties:
+  aliyunecs-access-key-id: abc
+  aliyunecs-access-key-secret: apmaas_api_access
+  aliyunecs-image-id: centos7u2_64_40G_cloudinit_20160520.raw
+  aliyunecs-instance-type: ecs.s2.small
+  aliyunecs-internet-max-bandwidth: 100
+  aliyunecs-private-address-only: false
+  aliyunecs-region: cn-hongkong
+  aliyunecs-security-group: k8s
+  aliyunecs-system-disk-category: cloud_efficiency
+  
