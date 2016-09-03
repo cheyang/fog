@@ -26,15 +26,17 @@ type VMSpec struct {
 }
 
 type Host struct {
-	Err         error
-	Name        string
-	SSHUserName string
-	SSHPort     int
-	SSHHostname string
-	SSHKeyPath  string
-	Roles       []string
-	State       state.State
-	DriverName  string
+	Err              error
+	Name             string
+	SSHUserName      string
+	SSHPort          int
+	SSHHostname      string
+	PublicIPAddress  string
+	PrivateIPAddress string // for most IAAS provider, it provides both public and private ip address
+	SSHKeyPath       string
+	Roles            []string
+	State            state.State
+	DriverName       string
 	VMSpec
 	Driver       drivers.Driver
 	TemplateName string
