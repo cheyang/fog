@@ -141,18 +141,22 @@ func (this *HostHandler) get(s persist.Store) *types.Host {
 
 	if host.SSHHostname == "" {
 		host.Err = fmt.Errorf("SSHHostName is empty")
+		return host
 	}
 	if host.SSHKeyPath == "" {
 		host.Err = fmt.Errorf("SSHKeyPath is empty")
+		return host
 	}
 	if host.SSHUserName == "" {
 		host.Err = fmt.Errorf("SSHUserName is empty")
+		return
 	}
 
 	log.Infof("Waiting for machine to be running, this may take a few minutes %s...\n", host.Name)
 	host.Err = mcnutils.WaitFor(drivers.MachineInState(host.Driver, state.Running))
 	if host.Err != nil {
 		log.Warnf("Err %s in waiting machine %s\n", host.Err.Error(), host.Name)
+		return host
 	}
 
 	if host.Err == nil {
