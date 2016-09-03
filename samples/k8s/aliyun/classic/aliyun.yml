@@ -15,7 +15,7 @@ DockerRun:
 Driver: aliyun
 Properties: 
   aliyunecs-access-key-id: abc
-  aliyunecs-access-key-secret: apmaas_api_access
+  aliyunecs-access-key-secret: ecd
   aliyunecs-image-id: centos7u2_64_40G_cloudinit_20160520.raw
   aliyunecs-instance-type: ecs.s2.small
   aliyunecs-internet-max-bandwidth: 100
@@ -23,6 +23,7 @@ Properties:
   aliyunecs-region: cn-hongkong
   aliyunecs-security-group: k8s
   aliyunecs-system-disk-category: cloud_efficiency
+  aliyunecs-zone: cn-hongkong-b
 Vmspecs: 
   - 
     Instances: 1
