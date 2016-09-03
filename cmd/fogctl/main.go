@@ -10,7 +10,6 @@ import (
 	"github.com/cheyang/fog/cmd/fogctl/remove"
 	"github.com/cheyang/fog/cmd/fogctl/scale"
 	"github.com/docker/machine/libmachine/log"
-	"github.com/docker/swarmkit/log"
 	"github.com/spf13/cobra"
 )
 
