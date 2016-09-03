@@ -8,7 +8,8 @@ Vmspecs:
     Instances: 1
     Properties:
       aliyunecs-description: kube-master,etcd
-      aliyunecs-tag: kube-master
+      aliyunecs-tag: 
+        - kube-master
   -
     Name: kube-slave
     roles:
@@ -16,7 +17,8 @@ Vmspecs:
     Instances: 2
     Properties:
       aliyunecs-description: kube-slave
-      aliyunecs-tag: kube-slave
+      aliyunecs-tag: 
+        - kube-slave
 ClusterName: mycluster
 Driver: aliyun
 ClusterType: k8s
