@@ -140,15 +140,15 @@ func (this *HostHandler) get(s persist.Store) *types.Host {
 	}
 
 	if host.SSHHostname == "" {
-		host.Err = fmt.Errorf("SSHHostName is empty")
+		host.Err = fmt.Errorf("SSHHostName of %s is empty", this.Name)
 		return host
 	}
 	if host.SSHKeyPath == "" {
-		host.Err = fmt.Errorf("SSHKeyPath is empty")
+		host.Err = fmt.Errorf("SSHKeyPath of %s is empty", this.Name)
 		return host
 	}
 	if host.SSHUserName == "" {
-		host.Err = fmt.Errorf("SSHUserName is empty")
+		host.Err = fmt.Errorf("SSHUserName of %s is empty", this.Name)
 		return host
 	}
 
