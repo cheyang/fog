@@ -2,6 +2,7 @@ package ecs
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -445,6 +446,9 @@ type CreateInstanceResponse struct {
 // You can read doc at http://docs.aliyun.com/#/pub/ecs/open-api/instance&createinstance
 func (client *Client) CreateInstance(args *CreateInstanceArgs) (instanceId string, err error) {
 	response := CreateInstanceResponse{}
+	data, _ := json.MarshalIndent(args, "", "    ")
+	fmt.Printf("Create Instance Data: %s\n", string(data))
+
 	err = client.Invoke("CreateInstance", args, &response)
 	if err != nil {
 		return "", err
