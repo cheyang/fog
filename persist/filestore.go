@@ -53,6 +53,11 @@ func (s Filestore) CreateStorePath(name string) error {
 }
 
 func (s Filestore) Save(host *types.Host) error {
+	if host.Err != nil {
+		host.ErrMessage = host.Err.Error()
+		host.Err = nil
+	}
+
 	data, err := json.MarshalIndent(host, "", "    ")
 	if err != nil {
 		return err
@@ -72,10 +77,6 @@ func (s Filestore) Save(host *types.Host) error {
 	err = s.saveToFile(driverName, driverPath)
 	if err != nil {
 		logrus.Infof("err in saving %s is : %v", driverPath, err)
-	}
-
-	if host.Err != nil {
-		host.ErrMessage = host.Err.Error()
 	}
 
 	return s.saveToFile(data, filepath.Join(hostPath, "config.json"))
