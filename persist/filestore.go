@@ -55,7 +55,6 @@ func (s Filestore) CreateStorePath(name string) error {
 func (s Filestore) Save(host *types.Host) error {
 	if host.Err != nil {
 		host.ErrMessage = host.Err.Error()
-		host.Err = nil
 	}
 
 	data, err := json.MarshalIndent(host, "", "    ")
