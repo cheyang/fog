@@ -78,6 +78,7 @@ func (this *HostHandler) create(s persist.Store) *types.Host {
 		host.Err = this.Driver.Create()
 		if host.Err != nil {
 			log.Warnf("Err %s in creating machine %s\n", host.Err.Error(), this.Name)
+			return host
 		} else {
 			log.Infof("Creating machine for %s...\n", this.Name)
 		}
@@ -89,6 +90,7 @@ func (this *HostHandler) create(s persist.Store) *types.Host {
 		host.Err = mcnutils.WaitFor(drivers.MachineInState(this.Driver, state.Running))
 		if host.Err != nil {
 			log.Warnf("Err %s in waiting machine %s\n", host.Err.Error(), this.Name)
+			return host
 		}
 	}
 
@@ -98,6 +100,7 @@ func (this *HostHandler) create(s persist.Store) *types.Host {
 		if err != nil {
 			host.Err = fmt.Errorf("Error detecting OS: %s", err)
 			log.Warnf("Error detecting OS: %s\n", err)
+			return host
 		}
 	}
 
@@ -116,17 +119,18 @@ func (this *HostHandler) create(s persist.Store) *types.Host {
 		if host.Err == nil {
 			host.SSHPort, host.Err = this.Driver.GetSSHPort()
 		} else {
-			host.Err = host.Err
 			log.Warnf("Failed to create host %s: %s\n", this.Name, host.Err)
+			return host
 		}
 
 		if host.Err != nil {
 			log.Warnf("Failed to create host %s: %s\n", this.Name, host.Err)
+			return host
 		}
 
 	} else {
-
 		log.Warnf("Failed to create host %s: %s\n", this.Name, host.Err)
+		return host
 	}
 
 	return host
