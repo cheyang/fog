@@ -27,6 +27,7 @@ type VMSpec struct {
 
 type Host struct {
 	Err              error
+	ErrMessage       string
 	Name             string
 	SSHUserName      string
 	SSHPort          int

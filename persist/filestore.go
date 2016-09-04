@@ -74,6 +74,10 @@ func (s Filestore) Save(host *types.Host) error {
 		logrus.Infof("err in saving %s is : %v", driverPath, err)
 	}
 
+	if host.Err != nil {
+		host.ErrMessage = host.Err.Error()
+	}
+
 	return s.saveToFile(data, filepath.Join(hostPath, "config.json"))
 }
 
