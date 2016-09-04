@@ -139,6 +139,13 @@ func (this *HostHandler) get(s persist.Store) *types.Host {
 		host.Err = err
 	}
 
+	if host.ErrMessage != "" {
+		host.Err = fmt.Errorf("Can't load host %s because its error is not empty, it reported %s",
+			this.Name,
+			host.ErrMessage)
+		return host
+	}
+
 	if host.SSHHostname == "" {
 		host.Err = fmt.Errorf("SSHHostName of %s is empty", this.Name)
 		return host
