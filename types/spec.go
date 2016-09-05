@@ -14,7 +14,7 @@ type Spec struct {
 	DockerRun       *docker.ContainerCreateConfig `json:"DockerRun"`
 	Run             []string                      `json:"Run"`
 	CloudDriverName string                        `json:"Driver"`
-	Update          bool                          `json:"Update"` // Update an exist cluster, by default it's false.
+	Update          bool                          `json:"-"` // Update an exist cluster, by default it's false.
 }
 
 type VMSpec struct {
