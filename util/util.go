@@ -13,7 +13,7 @@ func GetStorePath(name string) (storePath string, err error) {
 	// if etc, err = os.Getwd(); err != nil {
 	// 	return storePath, err
 	// } else {
-	storePath = filepath.Join(etc, storeRoot, name)
+	storePath = filepath.Join(etc, storeBase, name)
 	// }
 
 	return storePath, err
@@ -22,7 +22,7 @@ func GetStorePath(name string) (storePath string, err error) {
 func SetStoreRoot(root string) error {
 	re := regexp.MustCompile("^(\\w+)$")
 	if re.MatchString(root) {
-		storeRoot = fmt.Sprintf(".%s", root)
+		storeBase = fmt.Sprintf(".%s", root)
 	} else {
 		return fmt.Errorf("store base %s is illegal.", root)
 	}
