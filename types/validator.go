@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	"github.com/Sirupsen/logrus"
+	docker_client "github.com/docker/engine-api/client"
 )
 
 func Validate(specs Spec) error {
@@ -42,6 +43,10 @@ func Validate(specs Spec) error {
 		return fmt.Errorf("DockerRun and Run can't be empty either")
 	}
 
+	if _, err := docker_client.NewEnvClient(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -56,7 +61,7 @@ func validateMap(props map[string]interface{}) error {
 		case bool:
 		case float64:
 		default:
-			return fmt.Errorf("The type %s of value %s, and its key is %s", reflect.TypeOf(v), reflect.ValueOf(v), k)
+			return fmt.Errorf("The type %s of value %s, and its key is %s. It's not in expected.", reflect.TypeOf(v), reflect.ValueOf(v), k)
 		}
 	}
 
