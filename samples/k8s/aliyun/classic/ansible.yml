@@ -111,6 +111,6 @@ kubelet_options:
 insecure_registrys:
   - "{{ kube_regitry }}"
 
-flannel_opts: "-public-ip {{ nventory_hostname }}"
+flannel_opts: "-public-ip={{ inventory_hostname }}"
 
 cluster_name: mycluster

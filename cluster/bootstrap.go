@@ -2,6 +2,7 @@ package cluster
 
 import (
 	"github.com/Sirupsen/logrus"
+	provider_registry "github.com/cheyang/fog/cloudprovider/registry"
 	"github.com/cheyang/fog/cluster/ansible"
 	"github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/host"
@@ -45,7 +46,7 @@ func Bootstrap(spec types.Spec) error {
 		}
 	}
 
-	cp := initProivder(spec.CloudDriverName, spec.ClusterType)
+	cp := provider_registry.GetProvider(spec.CloudDriverName, spec.ClusterType)
 	if cp != nil {
 		cp.SetHosts(hosts)
 		cp.Configure() // configure IaaS
