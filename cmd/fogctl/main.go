@@ -65,7 +65,7 @@ var mainCmd = &cobra.Command{
 		}
 
 		if flags.Changed("docker-version") {
-			dockerVersion, err := flags.GetString(name)
+			dockerVersion, err := flags.GetString("docker-version")
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 				os.Exit(1)
@@ -81,7 +81,6 @@ var mainCmd = &cobra.Command{
 }
 
 func init() {
-	mainCmd.PersistentFlags().StringP("config-file", "f", "", "The config file")
 	mainCmd.PersistentFlags().StringP("log-level", "l", "info", "Log level (options \"debug\", \"info\", \"warn\", \"error\", \"fatal\", \"panic\")")
 	mainCmd.PersistentFlags().BoolP("debug-docker-machine", "D", false, "Debug the docker machine library")
 	mainCmd.PersistentFlags().StringP("docker-version", "d", "1.23", "Set the docker client version")
