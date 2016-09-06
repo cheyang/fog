@@ -6,7 +6,7 @@ import (
 	aliyun_k8s "github.com/cheyang/fog/cloudprovider/providers/aliyun/k8s"
 )
 
-func GetProivder(provider, clusterType string) cloudprovider.CloudInterface {
+func GetProvider(provider, clusterType string) cloudprovider.CloudInterface {
 
 	providerFunc := providerFuncMap[provider][clusterType]
 
