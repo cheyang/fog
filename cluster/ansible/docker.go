@@ -8,21 +8,23 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/docker/docker/pkg/stdcopy"
+	docker_client "github.com/docker/engine-api/client"
 	docker "github.com/docker/engine-api/types"
 	"github.com/docker/engine-api/types/container"
 	"golang.org/x/net/context"
 )
 
-func (this *ansibleManager) initDockerClient() error {
+func (this *ansibleManager) initDockerClient() (err error) {
 	dockerClient, err = docker_client.NewEnvClient()
 	return err
 }
 
 func (this *ansibleManager) pullImage() error {
 	ctx := context.Background()
-	return dockerClient.ImagePull(ctx,
+	_, err := dockerClient.ImagePull(ctx,
 		this.containerCreateConfig.Config.Image,
 		docker.ImagePullOptions{})
+	return err
 }
 
 func (this *ansibleManager) imageExist() bool {

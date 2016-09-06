@@ -97,10 +97,12 @@ func (this *ansibleManager) dockerRun() error {
 		return err
 	}
 	if c.State.ExitCode != 0 {
-		logrus.Infof("Exit failed %v, rc is %d", c.State.Error, c.State.ExitCode)
+		// logrus.Errorf("Exit failed %v, rc is %d", c.State.Error, c.State.ExitCode)
+		return fmt.Errorf("Exit failed %v, rc is %d", c.State.Error, c.State.ExitCode)
 	} else {
 		logrus.Infoln("Exit successfully.")
 	}
+	return nil
 }
 
 func (this *ansibleManager) SetCommander(cmd interface{}) error {

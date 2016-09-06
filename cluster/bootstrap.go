@@ -45,7 +45,6 @@ func Bootstrap(spec types.Spec) error {
 			return host.Err
 		}
 	}
-
 	cp := provider_registry.GetProvider(spec.CloudDriverName, spec.ClusterType)
 	if cp != nil {
 		cp.SetHosts(hosts)
