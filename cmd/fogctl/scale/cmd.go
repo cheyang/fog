@@ -65,6 +65,7 @@ var (
 )
 
 func init() {
-	Cmd.Flags().BoolP("update-all", "u", false, "Only update the new node with ansible.")
-	Cmd.Flags().StringP("with-roles", "w", "", "If you need the inventory file also includes role")
+	flags := Cmd.Flags()
+	flags.BoolP("update-all", "u", false, "Only update the new node with ansible.")
+	flags.StringP("with-roles", "w", "", "If you need the inventory file also includes role")
 }

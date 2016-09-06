@@ -55,6 +55,7 @@ func (this *HostHandler) create(s persist.Store) *types.Host {
 		Driver:     this.Driver,
 		DriverName: this.VMSpec.CloudDriverName,
 		VMSpec:     this.VMSpec,
+		Deployed:   false,
 	}
 	s.CreateStorePath(this.Name)
 

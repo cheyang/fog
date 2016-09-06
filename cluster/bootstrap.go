@@ -1,12 +1,17 @@
 package cluster
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Sirupsen/logrus"
 	provider_registry "github.com/cheyang/fog/cloudprovider/registry"
 	"github.com/cheyang/fog/cluster/ansible"
 	"github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/host"
+	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
+	"github.com/cheyang/fog/util"
 	"github.com/cheyang/fog/util/dump"
 )
 
@@ -63,5 +68,29 @@ func Bootstrap(spec types.Spec) error {
 		deployer.SetCommander(spec.DockerRun)
 	}
 
-	return deployer.Run()
+	err = deployer.Run()
+	if err != nil {
+		return err
+	}
+
+	name := spec.Name
+	storePath, err := util.GetStorePath(name)
+	if err != nil {
+		return err
+	}
+
+	if _, err := os.Stat(storePath); os.IsNotExist(err) {
+		return fmt.Errorf("Failed to find the storage of cluster %s in %s",
+			name,
+			storePath)
+	}
+	storage := persist.NewFilestore(storePath)
+
+	for _, host := range hosts {
+		host.Deployed = true
+		err = storage.Save(&host)
+		logrus.WithError(err).Warningf("failed to save %s", host.Name)
+	}
+
+	return nil
 }

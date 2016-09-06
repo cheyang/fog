@@ -6,16 +6,13 @@ import (
 	"regexp"
 )
 
-var storeBase string = ".fog"
+var (
+	storeBase string = ".fog"
+	etc       string = "/etc"
+)
 
 func GetStorePath(name string) (storePath string, err error) {
-	var etc string = "/etc"
-	// if etc, err = os.Getwd(); err != nil {
-	// 	return storePath, err
-	// } else {
 	storePath = filepath.Join(etc, storeBase, name)
-	// }
-
 	return storePath, err
 }
 
