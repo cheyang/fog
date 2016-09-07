@@ -8,10 +8,10 @@ import (
 	"github.com/cheyang/fog/types"
 )
 
-func provisionVMs(spec types.Spec) (hosts []types.Host, err error) {
+func provisionVMs(spec types.Spec, save bool) (hosts []types.Host, err error) {
 	bus := make(chan types.Host)
 	defer close(bus)
-	vmSpecs, err := host_utils.BuildHostConfigs(spec)
+	vmSpecs, err := host_utils.BuildHostConfigs(spec, save)
 	if err != nil {
 		return hosts, err
 	}

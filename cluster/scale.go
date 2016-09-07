@@ -28,7 +28,7 @@ func Scale(s persist.Store, desiredMap map[string]int) error {
 	if err != nil {
 		return nil
 	}
-	defer s.SaveSpec(spec)
+	// defer s.SaveSpec(spec)
 	// vm spec name: index
 	runningMap := make(map[string]types.VMSpec)
 	for _, vmSpec := range spec.VMSpecs {

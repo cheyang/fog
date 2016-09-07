@@ -13,8 +13,7 @@ import (
 // key is the vmspec name, value is the host name list
 var (
 	runningHostMap map[string][]string
-
-	splitHostname = "(.+)-(\\d+)"
+	splitHostname  = "(.+)-(\\d+)"
 )
 
 func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool) error {
@@ -24,7 +23,8 @@ func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]
 		return err
 	}
 
-	err = buildRunningMap(runningHosts)
+	// not save spec
+	err = buildRunningMap(runningHosts, false)
 	if err != nil {
 		return err
 	}

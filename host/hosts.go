@@ -65,13 +65,17 @@ func createStorePath(specs types.Spec) error {
 }
 
 // step 1
-func BuildHostConfigs(specs types.Spec) (vmSpecs []types.VMSpec, err error) {
+func BuildHostConfigs(specs types.Spec, save bool) (vmSpecs []types.VMSpec, err error) {
 	if err := createStorePath(specs); err != nil {
 		return vmSpecs, err
 	}
 
 	storage := persist.NewFilestore(storePath)
-	storage.SaveSpec(&specs)
+	if save {
+		if err := storage.SaveSpec(&specs); err != nil {
+			return vmSpecs, err
+		}
+	}
 
 	dup := make(map[string]bool)
 	for _, vmSpec := range specs.VMSpecs {
