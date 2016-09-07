@@ -2,6 +2,8 @@ package create
 
 import (
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/cheyang/fog/cluster"
 	"github.com/cheyang/fog/types"
@@ -13,6 +15,11 @@ var (
 		Use:   "create",
 		Short: "Create a cluster",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			start := time.Now()
+			defer func() {
+				end := time.Now()
+				fmt.Printf("Creating a cluster takes about %v minutes", end.Sub(start).Minutes())
+			}()
 			//load spec
 			if !cmd.Flags().Changed("config-file") {
 				return errors.New("--config-file are mandatory")

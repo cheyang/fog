@@ -105,7 +105,7 @@ func (this *ansibleManager) inspectContainer(id string) (docker.ContainerJSON, e
 func (this *ansibleManager) genBindsForAnsible() (binds []string) {
 
 	binds = append(binds,
-		fmt.Sprintf("%s:%s:ro", invenrtoryFile, ansibleHostFile),
+		fmt.Sprintf("%s:%s:ro", inventoryFile, ansibleHostFile),
 		fmt.Sprintf("%s:%s:ro", this.store.GetMachinesDir(), ansibleSSHkeysDir),
 	)
 
