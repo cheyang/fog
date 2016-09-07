@@ -16,7 +16,7 @@ func provisionVMs(spec types.Spec) (hosts []types.Host, err error) {
 	hostCount := len(vmSpecs)
 	err = host_utils.CreateInBatch(vmSpecs, bus)
 	if err != nil {
-		return err
+		return hosts, err
 	}
 
 	hosts = make([]types.Host, hostCount)

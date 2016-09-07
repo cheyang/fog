@@ -74,13 +74,10 @@ func nextNumber(name string) (int, error) {
 // parse host name to two parts, spec name and id, take master-1 as example, spec name is master, id is 1
 func parseHostname(hostname string) (specName string, id int, err error) {
 	re := regexp.MustCompile(splitHostname)
-	match := re.FindStringSubmatch(s)
+	match := re.FindStringSubmatch(hostname)
 	specName = match[1]
 	id, err = strconv.Atoi(match[2])
-	if err != nil {
-		return "", "", err
-	}
-	return specName, id, nil
+	return specName, id, err
 }
 
 func buildRunningMap(hosts []*types.Host) (err error) {
@@ -104,6 +101,8 @@ func buildRunningMap(hosts []*types.Host) (err error) {
 	for _, v := range runningHostMap {
 		sort.Sort(ByHostname(v))
 	}
+
+	return nil
 }
 
 type ByHostname []string
