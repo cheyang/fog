@@ -1,14 +1,10 @@
 package create
 
 import (
-	"bytes"
 	"errors"
-	"io/ioutil"
-	"os"
 
 	"github.com/cheyang/fog/cluster"
 	"github.com/cheyang/fog/types"
-	"github.com/cheyang/fog/util/yaml"
 	"github.com/spf13/cobra"
 )
 
@@ -17,30 +13,17 @@ var (
 		Use:   "create",
 		Short: "Create a cluster",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			//load spec
 			if !cmd.Flags().Changed("config-file") {
 				return errors.New("--config-file are mandatory")
 			}
-
 			configFile, err := cmd.Flags().GetString("config-file")
 			if err != nil {
 				return err
 			}
+			spec, err := types.LoadSpec(configFile)
 
-			// read and parse the config file
-			spec := types.Spec{}
-			if _, err := os.Stat(configFile); os.IsNotExist(err) {
-				return err
-			}
-			data, err := ioutil.ReadFile(configFile)
-			if err != nil {
-				return err
-			}
-			decoder := yaml.NewYAMLToJSONDecoder(bytes.NewReader(data))
-			err = decoder.Decode(&spec)
-			if err != nil {
-				return err
-			}
-
+			//set retry
 			retry, err := cmd.Flags().GetBool("retry")
 			if err != nil {
 				return err

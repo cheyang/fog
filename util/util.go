@@ -2,8 +2,11 @@ package util
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
+
+	"github.com/cheyang/fog/persist"
 )
 
 var (
@@ -25,4 +28,19 @@ func SetStoreRoot(root string) error {
 	}
 
 	return nil
+}
+
+func GetStorage(name string) (persist.Store, error) {
+	storePath, err := GetStorePath(name)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := os.Stat(storePath); os.IsNotExist(err) {
+		return nil, fmt.Errorf("Failed to find the storage of cluster %s in %s",
+			name,
+			storePath)
+	}
+	storage := persist.NewFilestore(storePath)
+
+	return storage, nil
 }
