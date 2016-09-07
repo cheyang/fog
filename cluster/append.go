@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/host"
@@ -31,12 +30,16 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 		return err
 	}
 
+	logrus.Infof("runningHostMap: %v", runningHostMap)
+
 	for _, vmSpec := range appendSpec.VMSpecs {
 		vmSpec.Start, err = nextNumber(vmSpec.Name)
 		if err != nil {
 			return err
 		}
 	}
+
+	logrus.Infof("appendSpec: %v", appendSpec)
 
 	vmSpecs, err := host.BuildHostConfigs(appendSpec)
 	if err != nil {
@@ -96,6 +99,8 @@ func buildRunningMap(hosts []*types.Host) (err error) {
 		sort.Sort(ByHostname(v))
 	}
 
+	logrus.Infof("running host map %v", runningHostMap)
+
 	return nil
 }
 
@@ -108,11 +113,11 @@ func (s ByHostname) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 func (s ByHostname) Less(i, j int) bool {
-	si, err := strconv.Atoi(strings.Split(s[i], "-")[len(strings.Split(s[i], "-"))-1])
+	_, si, err := parseHostname(s[i])
 	if err != nil {
 		logrus.Infof("err: %v", err)
 	}
-	sj, err := strconv.Atoi(strings.Split(s[j], "-")[len(strings.Split(s[j], "-"))-1])
+	_, sj, err := parseHostname(s[j])
 	if err != nil {
 		logrus.Infof("err: %v", err)
 	}
