@@ -18,7 +18,7 @@ var (
 			start := time.Now()
 			defer func() {
 				end := time.Now()
-				fmt.Printf("Creating a cluster takes about %v minutes", end.Sub(start).Minutes())
+				fmt.Printf("Creating a cluster takes about %v minutes.\n", end.Sub(start).Minutes())
 			}()
 			//load spec
 			if !cmd.Flags().Changed("config-file") {

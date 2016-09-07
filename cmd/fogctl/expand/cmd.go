@@ -2,7 +2,9 @@ package expand
 
 import (
 	"errors"
+	"fmt"
 	"strings"
+	"time"
 
 	"github.com/cheyang/fog/cluster"
 	"github.com/cheyang/fog/types"
@@ -15,6 +17,12 @@ var (
 		Use:   "expand",
 		Short: "expand a cluster",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			start := time.Now()
+			defer func() {
+				end := time.Now()
+				fmt.Printf("scaling out a cluster takes about %v minutes.\n", end.Sub(start).Minutes())
+			}()
+
 			if len(args) == 0 {
 				return errors.New("expand command takes no arguments")
 			}
