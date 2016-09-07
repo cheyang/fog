@@ -24,7 +24,7 @@ var dockerClient *docker_client.Client
 var (
 	ansibleHostFile   string // inside container
 	ansibleSSHkeysDir string // inside container
-	invenrtoryFile    string // host
+	inventoryFile     string // host
 )
 
 func init() {
@@ -156,7 +156,7 @@ func (this *ansibleManager) createInventoryFile() (path string, err error) {
 	deploymentDir := storage.GetDeploymentDir()
 	t := time.Now()
 	timestamp := fmt.Sprint(t.Format("20060102150405"))
-	filename = "inventory_" + timestamp
+	filename := "inventory_" + timestamp
 	path = filepath.Join(deploymentDir, filename)
 	f, err := os.Create(path)
 	defer f.Close()
