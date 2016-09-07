@@ -43,6 +43,9 @@ var (
 				}
 			}
 			storage, err := util.GetStorage(name)
+			if err != nil {
+				return err
+			}
 
 			return cluster.Scale(storage, desireMap)
 		},
