@@ -34,6 +34,7 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 
 	for i, vmSpec := range appendSpec.VMSpecs {
 		appendSpec.VMSpecs[i].Start, err = nextNumber(vmSpec.Name)
+		logrus.Infof("appendSpec.VMSpecs[%d].Start=%d", i, appendSpec.VMSpecs[i].Start)
 		if err != nil {
 			return err
 		}
