@@ -46,7 +46,7 @@ func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]
 	role_loop:
 		for _, role := range host.Roles {
 			if _, found := requiredRoleMap[role]; found {
-				hosts := append(hosts, host)
+				hosts = append(hosts, host)
 				break role_loop
 			}
 		}
