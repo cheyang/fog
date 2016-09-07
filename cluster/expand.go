@@ -17,14 +17,14 @@ var (
 	splitHostname = "(.+)-(\\d+)"
 )
 
-func ExpandCluster(s persist.Store, spec types.Spec, requiredRoles []string) error {
+func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool) error {
 	spec.Update = true
-	hosts, _, err := persist.LoadAllHosts(s)
+	runningHosts, _, err := persist.LoadAllHosts(s)
 	if err != nil {
 		return err
 	}
 
-	err = buildRunningMap(hosts)
+	err = buildRunningMap(runningHosts)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,25 @@ func ExpandCluster(s persist.Store, spec types.Spec, requiredRoles []string) err
 		return err
 	}
 
-	return deployer.Run()
+	// pick up the hosts for deployment
+	hosts := make([]types.Host, 0)
+	for _, host := range runningHosts {
+	role_loop:
+		for _, role := range host.Roles {
+			if _, found := requiredRoleMap[role]; found {
+				hosts := append(hosts, host)
+				break role_loop
+			}
+		}
+	}
+
+	hosts = append(hosts, newHosts...)
+
+	err = configureIaaS(hosts, spec)
+	if err != nil {
+		return err
+	}
+	return runDeploy(hosts, spec)
 }
 
 // next number of the specified vmspec name
