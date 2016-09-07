@@ -1,6 +1,9 @@
 package cluster
 
 import (
+	provider_registry "github.com/cheyang/fog/cloudprovider/registry"
+	"github.com/cheyang/fog/cluster/ansible"
+	"github.com/cheyang/fog/cluster/deploy"
 	host_utils "github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/types"
 )
@@ -31,4 +34,31 @@ func provisionVMs(spec types.Spec) (hosts []types.Host, err error) {
 	}
 
 	return hosts, nil
+}
+
+func configureIaaS(hosts []types.Host, spec types.Spec) (err error) {
+	cp := provider_registry.GetProvider(spec.CloudDriverName, spec.ClusterType)
+	if cp != nil {
+		cp.SetHosts(hosts)
+		err = cp.Configure() // configure IaaS
+		if err != nil {
+			return err
+		}
+	}
+}
+
+func runDeploy(hosts []types.Host, spec types.Spec) (err error) {
+	var deployer deploy.Deployer
+	deployer, err = ansible.NewDeployer(spec.Name)
+	if err != nil {
+		return err
+	}
+	deployer.SetHosts(hosts)
+	if len(spec.Run) > 0 {
+		deployer.SetCommander(spec.Run)
+	} else {
+		deployer.SetCommander(spec.DockerRun)
+	}
+
+	return deployer.Run()
 }

@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/cheyang/fog/cluster/ansible"
+	"github.com/cheyang/fog/cluster/deploy"
 	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
@@ -18,8 +20,8 @@ var (
 	splitHostname = "(.+)-(\\d+)"
 )
 
-func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []string) error {
-	appendSpec.Update = true
+func ExpandCluster(s persist.Store, spec types.Spec, requiredRoles []string) error {
+	spec.Update = true
 	hosts, _, err := persist.LoadAllHosts(s)
 	if err != nil {
 		return err
@@ -29,27 +31,39 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 	if err != nil {
 		return err
 	}
-
-	logrus.Infof("runningHostMap: %+v", runningHostMap)
-
-	for i, vmSpec := range appendSpec.VMSpecs {
-		appendSpec.VMSpecs[i].Start, err = nextNumber(vmSpec.Name)
-		logrus.Infof("appendSpec.VMSpecs[%d].Start=%d", i, appendSpec.VMSpecs[i].Start)
+	for i, vmSpec := range spec.VMSpecs {
+		spec.VMSpecs[i].Start, err = nextNumber(vmSpec.Name)
 		if err != nil {
 			return err
 		}
 	}
-
-	logrus.Infof("appendSpec: %+v", appendSpec)
-
-	vmSpecs, err := host.BuildHostConfigs(appendSpec)
+	vmSpecs, err := host.BuildHostConfigs(spec)
 	if err != nil {
 		return err
 	}
 
-	logrus.Infof("append vmspecs %+v", vmSpecs)
+	newHosts, err := provisionVMs(spec)
+	if err != nil {
+		return err
+	}
+	cp := provider_registry.GetProvider(spec.CloudDriverName, spec.ClusterType)
+	if cp != nil {
+		cp.SetHosts(newHosts)
+		cp.Configure() // configure IaaS
+	}
+	var deployer deploy.Deployer
+	deployer, err = ansible.NewDeployer(spec.Name)
+	if err != nil {
+		return err
+	}
+	deployer.SetHosts(newHosts)
+	if len(spec.Run) > 0 {
+		deployer.SetCommander(spec.Run)
+	} else {
+		deployer.SetCommander(spec.DockerRun)
+	}
 
-	return nil
+	return deployer.Run()
 }
 
 // next number of the specified vmspec name
@@ -66,7 +80,6 @@ func nextNumber(name string) (int, error) {
 		logrus.Infof("The max of %s is %d", name, max)
 		return max + 1, nil
 	}
-
 	return 0, nil
 }
 
@@ -100,9 +113,6 @@ func buildRunningMap(hosts []*types.Host) (err error) {
 	for _, v := range runningHostMap {
 		sort.Sort(ByHostname(v))
 	}
-
-	logrus.Infof("running host map %+v", runningHostMap)
-
 	return nil
 }
 
