@@ -45,6 +45,7 @@ func configureIaaS(hosts []types.Host, spec types.Spec) (err error) {
 			return err
 		}
 	}
+	return nil
 }
 
 func runDeploy(hosts []types.Host, spec types.Spec) (err error) {
@@ -59,6 +60,5 @@ func runDeploy(hosts []types.Host, spec types.Spec) (err error) {
 	} else {
 		deployer.SetCommander(spec.DockerRun)
 	}
-
 	return deployer.Run()
 }

@@ -6,9 +6,6 @@ import (
 	"strconv"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/cheyang/fog/cluster/ansible"
-	"github.com/cheyang/fog/cluster/deploy"
-	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
 )
@@ -37,30 +34,10 @@ func ExpandCluster(s persist.Store, spec types.Spec, requiredRoles []string) err
 			return err
 		}
 	}
-	vmSpecs, err := host.BuildHostConfigs(spec)
-	if err != nil {
-		return err
-	}
 
 	newHosts, err := provisionVMs(spec)
 	if err != nil {
 		return err
-	}
-	cp := provider_registry.GetProvider(spec.CloudDriverName, spec.ClusterType)
-	if cp != nil {
-		cp.SetHosts(newHosts)
-		cp.Configure() // configure IaaS
-	}
-	var deployer deploy.Deployer
-	deployer, err = ansible.NewDeployer(spec.Name)
-	if err != nil {
-		return err
-	}
-	deployer.SetHosts(newHosts)
-	if len(spec.Run) > 0 {
-		deployer.SetCommander(spec.Run)
-	} else {
-		deployer.SetCommander(spec.DockerRun)
 	}
 
 	return deployer.Run()
@@ -92,7 +69,7 @@ func parseHostname(hostname string) (specName string, id int, err error) {
 	return specName, id, err
 }
 
-func buildRunningMap(hosts []*types.Host) (err error) {
+func buildRunningMap(hosts []types.Host) (err error) {
 	runningHostMap = make(map[string][]string)
 
 	for _, host := range hosts {
