@@ -30,7 +30,7 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 		return err
 	}
 
-	logrus.Infof("runningHostMap: %v", runningHostMap)
+	logrus.Infof("runningHostMap: %+v", runningHostMap)
 
 	for _, vmSpec := range appendSpec.VMSpecs {
 		vmSpec.Start, err = nextNumber(vmSpec.Name)
@@ -39,7 +39,7 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 		}
 	}
 
-	logrus.Infof("appendSpec: %v", appendSpec)
+	logrus.Infof("appendSpec: %+v", appendSpec)
 
 	vmSpecs, err := host.BuildHostConfigs(appendSpec)
 	if err != nil {
@@ -62,6 +62,7 @@ func nextNumber(name string) (int, error) {
 		if err != nil {
 			return 0, err
 		}
+		logrus.Infof("The max of %s is %d", name, max)
 		return max + 1, nil
 	}
 
@@ -99,7 +100,7 @@ func buildRunningMap(hosts []*types.Host) (err error) {
 		sort.Sort(ByHostname(v))
 	}
 
-	logrus.Infof("running host map %v", runningHostMap)
+	logrus.Infof("running host map %+v", runningHostMap)
 
 	return nil
 }
