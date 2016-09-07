@@ -24,7 +24,7 @@ func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]
 	}
 
 	// not save spec
-	err = buildRunningMap(runningHosts, false)
+	err = buildRunningMap(runningHosts)
 	if err != nil {
 		return err
 	}
@@ -35,7 +35,7 @@ func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]
 		}
 	}
 
-	newHosts, err := provisionVMs(spec)
+	newHosts, err := provisionVMs(spec, false)
 	if err != nil {
 		return err
 	}
