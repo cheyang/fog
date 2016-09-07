@@ -6,9 +6,9 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/cmd/fogctl/create"
+	"github.com/cheyang/fog/cmd/fogctl/expand"
 	"github.com/cheyang/fog/cmd/fogctl/list"
 	"github.com/cheyang/fog/cmd/fogctl/remove"
-	"github.com/cheyang/fog/cmd/fogctl/scale"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/spf13/cobra"
 )
@@ -86,7 +86,8 @@ func init() {
 	mainCmd.PersistentFlags().StringP("docker-version", "d", "1.23", "Set the docker client version")
 	mainCmd.AddCommand(
 		create.Cmd,
-		scale.Cmd,
+		// scale.Cmd,
+		expand.Cmd,
 		remove.Cmd,
 		list.Cmd,
 	)
