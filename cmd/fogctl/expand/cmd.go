@@ -37,8 +37,12 @@ var (
 				return err
 			}
 			roles := strings.Split(roleString, ",")
+			roleMap := make(map[string]bool)
+			for _, role := range roles {
+				roleMap[role] = true
+			}
 
-			return cluster.ExpandCluster(storage, spec, roles)
+			return cluster.ExpandCluster(storage, spec, roleMap)
 		},
 	}
 )
