@@ -24,7 +24,7 @@ var dockerClient *docker_client.Client
 var (
 	ansibleHostFile   string // inside container
 	ansibleSSHkeysDir string // inside container
-	inventoryFile     string // host
+	inventoryFile     string // inventory file in host
 )
 
 func init() {
