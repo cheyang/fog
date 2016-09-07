@@ -1,0 +1,37 @@
+---
+Vmspecs:
+  -
+    Name: kube-slave
+    roles:
+      - nodes
+    Instances: 2
+    Properties:
+      softlayer-image: CENTOS_7_64
+      softlayer-private-vlan-id: 280643
+      softlayer-description: sl
+      softlayer-region: sjc01
+      softlayer-cpu: 2
+      softlayer-memory: 1024
+      softlayer-domain: sjc-na.apm.ibmserviceengage.com
+      softlayer-hourly-billing: true
+      softlayer-private-net-only: true
+      softlayer-network-max-speed: 1000
+      softlayer-private-net-only: true
+ClusterName: mycluster
+Driver: softlayer
+ClusterType: k8s
+DockerRun:
+  Config:
+    Image: cheyang/k8s-ansible:on-build
+    Cmd:
+      - ./deploy-node.sh
+    Env:
+      - ANSIBLE_HOST_KEY_CHECKING=False
+    Tty: true
+  HostConfig:
+    Binds:
+      - /root/ansible.yml:/etc/ansible/group_vars/mycluster.yml
+Properties:
+  softlayer-api-key: abc
+  softlayer-user: cde
+  softlayer-api-endpoint: https://api.service.softlayer.com/rest/v3
