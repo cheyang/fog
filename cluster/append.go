@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/cheyang/fog/host"
 	"github.com/cheyang/fog/persist"
 	"github.com/cheyang/fog/types"
 )
@@ -20,7 +21,7 @@ var (
 
 func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []string) error {
 
-	hostList, _, err := persist.LoadAllHosts(s)
+	hosts, _, err := persist.LoadAllHosts(s)
 	if err != nil {
 		return err
 	}
@@ -30,6 +31,25 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 	if err != nil {
 		return nil
 	}
+
+	err = buildRunningMap(hosts)
+	if err != nil {
+		return err
+	}
+
+	for _, vmSpec := range appendSpec.VMSpecs {
+		vmSpec.Start, err = nextNumber(vmSpec.Name)
+		if err != nil {
+			return err
+		}
+	}
+
+	vmSpecs, err := host.BuildHostConfigs(appendSpec)
+	if err != nil {
+		return err
+	}
+
+	logrus.Infof("append vmspecs %+v", vmSpecs)
 
 	return nil
 }
@@ -51,6 +71,7 @@ func nextNumber(name string) (int, error) {
 	return 0, nil
 }
 
+// parse host name to two parts, spec name and id, take master-1 as example, spec name is master, id is 1
 func parseHostname(hostname string) (specName string, id int, err error) {
 	re := regexp.MustCompile(splitHostname)
 	match := re.FindStringSubmatch(s)
@@ -62,10 +83,11 @@ func parseHostname(hostname string) (specName string, id int, err error) {
 	return specName, id, nil
 }
 
-func buildRunningHostMap(hosts []*types.Host, err error) {
+func buildRunningMap(hosts []*types.Host) (err error) {
 	runningHostMap = make(map[string][]string)
 
 	for _, host := range hosts {
+		// build running host map
 		hostname := host.Name
 		key, _, err := parseHostname(hostname)
 		if err != nil {
@@ -77,7 +99,6 @@ func buildRunningHostMap(hosts []*types.Host, err error) {
 		}
 
 		runningHostMap[key] = append(runningHostMap[key], hostname)
-
 	}
 
 	for _, v := range runningHostMap {

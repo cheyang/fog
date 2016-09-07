@@ -23,6 +23,7 @@ type VMSpec struct {
 	Properties      map[string]interface{} `json:"Properties,omitempty"`
 	CloudDriverName string                 `json:"Driver"`
 	Instances       int                    `json:"Instances,omitempty"`
+	Start           int                    `json:"Start,omitempty"`
 }
 
 type Host struct {
@@ -41,7 +42,6 @@ type Host struct {
 	VMSpec
 	Driver       drivers.Driver
 	TemplateName string
-	Deployed     bool // flag to check if the deployment done, espcially for scale out
 }
 
 // type ContainerCreateConfig struct {
