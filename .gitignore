@@ -1,2 +1,3 @@
 util/**/*.yml
 .DS_Store
+*sublime*
