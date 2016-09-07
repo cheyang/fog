@@ -20,7 +20,7 @@ var (
 )
 
 func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []string) error {
-
+	appendSpec.Update = true
 	hosts, _, err := persist.LoadAllHosts(s)
 	if err != nil {
 		return err
