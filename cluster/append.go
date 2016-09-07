@@ -26,12 +26,6 @@ func ExpandCluster(s persist.Store, appendSpec types.Spec, requiredRoles []strin
 		return err
 	}
 
-	var spec *types.Spec
-	spec, err = s.LoadSpec()
-	if err != nil {
-		return nil
-	}
-
 	err = buildRunningMap(hosts)
 	if err != nil {
 		return err
