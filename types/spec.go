@@ -49,7 +49,7 @@ type Host struct {
 	TemplateName string
 }
 
-func LoadSpec(fileName string) (spec Spec, err error) {
+func LoadSpec(configFile string) (spec Spec, err error) {
 	spec = Spec{}
 	if _, err := os.Stat(configFile); os.IsNotExist(err) {
 		return spec, err
@@ -60,7 +60,5 @@ func LoadSpec(fileName string) (spec Spec, err error) {
 	}
 	decoder := yaml.NewYAMLToJSONDecoder(bytes.NewReader(data))
 	err = decoder.Decode(&spec)
-	if err != nil {
-		return spec, err
-	}
+	return spec, err
 }

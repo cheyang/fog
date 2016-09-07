@@ -69,6 +69,6 @@ func validateMap(props map[string]interface{}) error {
 	return nil
 }
 
-func ValidateAppendSpec(specs) error {
+func ValidateAppendSpec(spec Spec) error {
 	return nil
 }
