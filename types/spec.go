@@ -36,7 +36,7 @@ type Host struct {
 	ErrMessage       string
 	Name             string
 	SSHUserName      string
-	SSHPort          uint
+	SSHPort          int
 	SSHHostname      string
 	PublicIPAddress  string
 	PrivateIPAddress string // for most IAAS provider, it provides both public and private ip address
