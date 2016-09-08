@@ -52,7 +52,7 @@ func Scaleout(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool)
 }
 
 // next number of the specified vmspec name
-func nextNumber(runningHostMap map[string][]string, name string) (int, error) {
+func nextNumber(runningHostMap map[string][]string, name string) (uint, error) {
 	if orderedHostnames, found := runningHostMap[name]; found {
 		maxIndex := len(orderedHostnames) - 1
 		// s := strings.Split(orderedHostnames[maxIndex], "-")
