@@ -40,6 +40,7 @@ var (
 			}
 			spec, err := types.LoadSpec(configFile)
 
+			// build required role map
 			roleString, err := flags.GetString("with-roles")
 			if err != nil {
 				return err
