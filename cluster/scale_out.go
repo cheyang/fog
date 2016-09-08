@@ -16,7 +16,7 @@ var (
 	splitHostname  = "(.+)-(\\d+)"
 )
 
-func ExpandCluster(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool) error {
+func Scaleout(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool) error {
 	spec.Update = true
 	runningHosts, _, err := persist.LoadAllHosts(s)
 	if err != nil {
