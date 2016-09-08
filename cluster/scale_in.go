@@ -14,7 +14,7 @@ func Scalein(s persist.Store, scaleInMap map[string]int) error {
 		return err
 	}
 
-	runningHostMap, err = util.BuildRunningMap(hostList)
+	runningHostMap, err := util.BuildRunningMap(hostList)
 	if err != nil {
 		return err
 	}
