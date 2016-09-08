@@ -19,7 +19,7 @@ func BuildRunningMap(hosts []types.Host) (runningHostMap map[string][]string, er
 	for _, host := range hosts {
 		// build running host map
 		hostname := host.Name
-		key, _, err := parseHostname(hostname)
+		key, _, err := ParseHostname(hostname)
 		if err != nil {
 			return runningHostMap, err
 		}
@@ -37,7 +37,7 @@ func BuildRunningMap(hosts []types.Host) (runningHostMap map[string][]string, er
 	return runningHostMap, nil
 }
 
-func parseHostname(hostname string) (specName string, id int, err error) {
+func ParseHostname(hostname string) (specName string, id int, err error) {
 	re := regexp.MustCompile(splitHostname)
 	match := re.FindStringSubmatch(hostname)
 	specName = match[1]
@@ -54,11 +54,11 @@ func (s byHostname) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 func (s byHostname) Less(i, j int) bool {
-	_, si, err := parseHostname(s[i])
+	_, si, err := ParseHostname(s[i])
 	if err != nil {
 		logrus.Infof("err: %v", err)
 	}
-	_, sj, err := parseHostname(s[j])
+	_, sj, err := ParseHostname(s[j])
 	if err != nil {
 		logrus.Infof("err: %v", err)
 	}

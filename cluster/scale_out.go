@@ -42,7 +42,6 @@ func Scaleout(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool)
 			}
 		}
 	}
-
 	hosts = append(hosts, newHosts...)
 
 	err = configureIaaS(hosts, spec)
@@ -59,7 +58,7 @@ func nextNumber(runningHostMap map[string][]string, name string) (int, error) {
 		// s := strings.Split(orderedHostnames[maxIndex], "-")
 		// max, err := strconv.Atoi(s[len(s)-1])
 		hostname := orderedHostnames[maxIndex]
-		_, max, err := parseHostname(hostname)
+		_, max, err := util.ParseHostname(hostname)
 		if err != nil {
 			return 0, err
 		}
