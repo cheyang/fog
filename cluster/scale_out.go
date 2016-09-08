@@ -7,10 +7,6 @@ import (
 	"github.com/cheyang/fog/util"
 )
 
-const (
-	splitHostname = "(.+)-(\\d+)"
-)
-
 func Scaleout(s persist.Store, spec types.Spec, requiredRoleMap map[string]bool) error {
 	spec.Update = true
 	runningHosts, _, err := persist.LoadAllHosts(s)

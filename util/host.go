@@ -9,6 +9,10 @@ import (
 	"github.com/cheyang/fog/types"
 )
 
+const (
+	splitHostname = "(.+)-(\\d+)"
+)
+
 func BuildRunningMap(hosts []types.Host) (runningHostMap map[string][]string, err error) {
 	runningHostMap = make(map[string][]string)
 
