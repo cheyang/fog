@@ -13,7 +13,7 @@ func Scalein(s persist.Store, scaleInMap map[string]int) error {
 		return err
 	}
 
-	err = buildRunningMap(runningHosts)
+	err = buildRunningMap(hostList)
 	if err != nil {
 		return err
 	}
@@ -39,4 +39,6 @@ func Scalein(s persist.Store, scaleInMap map[string]int) error {
 			return fmt.Errorf("failed to find %s in storage, so can't scale it in %d", k, v)
 		}
 	}
+
+	return nil
 }
