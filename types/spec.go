@@ -27,8 +27,8 @@ type VMSpec struct {
 	Roles           []string               `json:"Roles"`
 	Properties      map[string]interface{} `json:"Properties,omitempty"`
 	CloudDriverName string                 `json:"Driver"`
-	Instances       int                    `json:"Instances,omitempty"`
-	Start           int                    `json:"Start,omitempty"`
+	Instances       uint                   `json:"Instances,omitempty"`
+	Start           uint                   `json:"Start,omitempty"`
 }
 
 type Host struct {
@@ -36,7 +36,7 @@ type Host struct {
 	ErrMessage       string
 	Name             string
 	SSHUserName      string
-	SSHPort          int
+	SSHPort          uint
 	SSHHostname      string
 	PublicIPAddress  string
 	PrivateIPAddress string // for most IAAS provider, it provides both public and private ip address

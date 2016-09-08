@@ -8,7 +8,7 @@ import (
 	"github.com/cheyang/fog/util"
 )
 
-func Scalein(s persist.Store, scaleInMap map[string]int) error {
+func Scalein(s persist.Store, scaleInMap map[string]uint) error {
 	hostList, _, err := persist.LoadAllHosts(s)
 	if err != nil {
 		return err
