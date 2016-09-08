@@ -5,6 +5,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/cheyang/fog/persist"
+	"github.com/cheyang/fog/util"
 )
 
 func Scalein(s persist.Store, scaleInMap map[string]int) error {
@@ -13,7 +14,7 @@ func Scalein(s persist.Store, scaleInMap map[string]int) error {
 		return err
 	}
 
-	err = buildRunningMap(hostList)
+	runningHostMap, err = util.BuildRunningMap(hostList)
 	if err != nil {
 		return err
 	}
