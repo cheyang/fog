@@ -63,7 +63,7 @@ func nextNumber(runningHostMap map[string][]string, name string) (uint, error) {
 			return 0, err
 		}
 		logrus.Infof("The max of %s is %d", name, max)
-		return max + 1, nil
+		return uint(max + 1), nil
 	}
 	return 0, nil
 }
