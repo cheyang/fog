@@ -25,7 +25,7 @@ docker machine + golang + ansible + docker
 1) ansible agent less的架构非常适合部署配置比较简单的docker集群  
 2) offical的playbook支持保证最专业的部署, k8s,mesos对playbook的支持都是最全面的  
 3) 强大的社区支持  
-4) 更为强大和灵活的可配置型
+4) 更为强大和灵活的可配置型(比如扩展master，etcd)
 使用docker
 
 ## 价值
