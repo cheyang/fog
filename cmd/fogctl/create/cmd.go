@@ -38,11 +38,9 @@ var (
 			spec.Update = retry
 
 			hosts, err := cluster.Bootstrap(spec)
-
 			if err != nil {
 				return err
 			}
-
 			for _, host := range hosts {
 				fmt.Printf("Name: %s, Ipaddress %s, SSH key path %s with roles [%v]\n",
 					host.Name,
@@ -50,6 +48,8 @@ var (
 					host.SSHKeyPath,
 					host.Roles)
 			}
+
+			return nil
 		},
 	}
 )
