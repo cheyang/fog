@@ -10,7 +10,7 @@ func Bootstrap(spec types.Spec) (hosts []types.Host, err error) {
 
 	err = types.Validate(spec)
 	if err != nil {
-		return host, err
+		return hosts, err
 	}
 
 	logrus.Infof("spec: %+v", spec)
@@ -20,12 +20,12 @@ func Bootstrap(spec types.Spec) (hosts []types.Host, err error) {
 	// save spec
 	hosts, err = provisionVMs(spec, true)
 	if err != nil {
-		return host, err
+		return hosts, err
 	}
 
 	err = configureIaaS(hosts, spec)
 	if err != nil {
-		return host, err
+		return hosts, err
 	}
 
 	return hosts, runDeploy(hosts, spec)
