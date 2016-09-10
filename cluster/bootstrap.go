@@ -18,7 +18,7 @@ func Bootstrap(spec types.Spec) (hosts []types.Host, err error) {
 	dump.InstallCoreDumpGenerator()
 
 	// save spec
-	hosts, err := provisionVMs(spec, true)
+	hosts, err = provisionVMs(spec, true)
 	if err != nil {
 		return err
 	}
