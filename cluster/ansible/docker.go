@@ -22,7 +22,7 @@ func (this *ansibleManager) initDockerClient() (err error) {
 
 func (this *ansibleManager) pullImage() error {
 	ctx := context.Background()
-	resp, err := dockerClient.ImageCreate(ctx,
+	resp, _:= dockerClient.ImageCreate(ctx,
 		this.containerCreateConfig.Config.Image,
 		docker.ImageCreateOptions{})
 	defer resp.Close()
