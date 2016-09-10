@@ -22,9 +22,12 @@ func (this *ansibleManager) initDockerClient() (err error) {
 
 func (this *ansibleManager) pullImage() error {
 	ctx := context.Background()
-	resp, _:= dockerClient.ImageCreate(ctx,
+	resp, err := dockerClient.ImageCreate(ctx,
 		this.containerCreateConfig.Config.Image,
 		docker.ImageCreateOptions{})
+	if err != nil {
+		return err
+	}
 	defer resp.Close()
 
 	fd, isTerminal := term.GetFdInfo(logrus.StandardLogger().Out)

@@ -37,7 +37,7 @@ var (
 						return err
 					}
 					key := kv[0]
-					scaleInMap[key] = value
+					scaleInMap[key] = uint(value)
 				} else {
 					return fmt.Errorf("the format of %s is not correct!", arg)
 				}
