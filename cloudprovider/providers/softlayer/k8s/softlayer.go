@@ -7,7 +7,7 @@ import (
 )
 
 type Softlayer struct {
-	hosts []types.Host
+	hosts []*types.Host
 }
 
 func New() cloudprovider.CloudInterface {
@@ -17,7 +17,7 @@ func New() cloudprovider.CloudInterface {
 func (this *Softlayer) SetConfigFromFlags(opts drivers.DriverOptions) error {
 	return nil
 }
-func (this *Softlayer) SetHosts(hosts []types.Host) {
+func (this *Softlayer) SetHosts(hosts []*types.Host) {
 
 }
 func (this *Softlayer) Configure() error {
