@@ -66,7 +66,7 @@ func LoadSpec(configFile string) (spec Spec, err error) {
 }
 
 func SaveSpec(spec *Spec, configFile string) error {
-	output, err := json.MarshalIndent(specs, "", "    ")
+	output, err := json.MarshalIndent(spec, "", "    ")
 	if err != nil {
 		//fmt.Println("Error marshalling to JSON:", err)
 		logrus.WithError(err).Infof("Error marshalling %v to JSON", spec)
