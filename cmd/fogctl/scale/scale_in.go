@@ -20,7 +20,7 @@ var (
 				return errors.New("scale in command takes no arguments")
 			}
 
-			scaleInMap := make(map[string]int)
+			scaleInMap := make(map[string]uint)
 			var name string
 			for i, arg := range args {
 				if i == len(args)-1 {
