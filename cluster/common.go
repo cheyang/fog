@@ -38,7 +38,7 @@ func provisionVMs(spec types.Spec, save bool) (hosts []*types.Host, err error) {
 }
 
 func configureIaaS(hosts []*types.Host, spec types.Spec) (err error) {
-	storage, err := util.GetStorage(name)
+	storage, err := util.GetStorage(spec.Name)
 	if err != nil {
 		return err
 	}
