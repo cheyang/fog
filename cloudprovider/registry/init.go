@@ -28,7 +28,7 @@ func RegisterProvider(cloudDriverName string, clusterType string, method func() 
 	return nil
 }
 
-var providerFuncMap = map[string](map[string]func() cloudprovider.CloudInterface){
+var providerFuncMap = map[string](map[string]func(s persist.Store) cloudprovider.CloudInterface){
 	"aliyun": map[string]func() cloudprovider.CloudInterface{
 		"k8s": aliyun_k8s.New,
 	},
