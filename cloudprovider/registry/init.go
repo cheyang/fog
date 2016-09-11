@@ -19,9 +19,9 @@ func GetProvider(provider, clusterType string, storage persist.Store) cloudprovi
 	return providerFunc(storage)
 }
 
-func RegisterProvider(cloudDriverName string, clusterType string, method func() cloudprovider.CloudInterface) error {
+func RegisterProvider(cloudDriverName string, clusterType string, method func(s persist.Store) cloudprovider.CloudInterface) error {
 
-	providerFuncMap[cloudDriverName] = map[string]func() cloudprovider.CloudInterface{
+	providerFuncMap[cloudDriverName] = map[string]func(s persist.Store) cloudprovider.CloudInterface{
 		clusterType: method,
 	}
 
