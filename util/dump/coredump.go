@@ -43,7 +43,7 @@ func InstallCoreDumpGenerator() {
 			case syscall.SIGQUIT:
 				t := time.Now()
 				timestamp := fmt.Sprint(t.Format("20060102150405"))
-				fmt.Println("User told me to generate core dump")
+				logrus.Infoln("User told me to generate core dump")
 				coredump("/tmp/go_" + timestamp + ".txt")
 			// case syscall.SIGTERM:
 			// 	fmt.Println("User told me to exit")
