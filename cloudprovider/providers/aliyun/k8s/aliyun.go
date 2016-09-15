@@ -112,7 +112,7 @@ type IpPermission struct {
 	IpRange    string
 }
 
-func (p *IpPermission) createAuthorizeSecurityGroupArgs(regionId common.Region, securityGroupId string, nicType NicType) *ecs.AuthorizeSecurityGroupArgs {
+func (p *IpPermission) createAuthorizeSecurityGroupArgs(regionId common.Region, securityGroupId string, nicType ecs.NicType) *ecs.AuthorizeSecurityGroupArgs {
 	args := ecs.AuthorizeSecurityGroupArgs{
 		RegionId:        regionId,
 		SecurityGroupId: securityGroupId,
