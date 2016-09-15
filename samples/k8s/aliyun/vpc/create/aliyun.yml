@@ -20,10 +20,10 @@ Properties:
   aliyunecs-instance-type: ecs.s2.small
   aliyunecs-internet-max-bandwidth: 100
   aliyunecs-private-address-only: false
-  aliyunecs-vpc-id: vpc-2zeayqrvhcs3zbio0ipu8
-  aliyunecs-vswitch-id: vsw-2zejldp7s1p25g7nmkvsi
+  aliyunecs-vpc-id: vpc-bp12hq6h8med0rzzh87jm
+  aliyunecs-vswitch-id: vsw-bp1cmlbzuktojuxpc7ccl
   aliyunecs-region: cn-hangzhou
-  aliyunecs-security-group: k8s
+  aliyunecs-security-group: k8s_vpc_hangzhou
   aliyunecs-system-disk-category: cloud_efficiency
   aliyunecs-io-optimized: optimized
 Vmspecs: 
