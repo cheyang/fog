@@ -7,7 +7,7 @@ DockerRun:
       - ./deploy-cluster.sh
     Env: 
       - ANSIBLE_HOST_KEY_CHECKING=False
-    Image: "cheyang/k8s-ansible:on-build"
+    Image: "registry.cn-hangzhou.aliyuncs.com/google-containers/k8s-ansible-aliyun"
     Tty: true
   HostConfig: 
     Binds: 
@@ -17,9 +17,11 @@ Properties:
   aliyunecs-access-key-id: abc
   aliyunecs-access-key-secret: ecd
   aliyunecs-image-id: centos7u2_64_40G_cloudinit_20160520.raw
-  aliyunecs-instance-type: ecs.n1.small
+  aliyunecs-instance-type: ecs.s2.small
   aliyunecs-internet-max-bandwidth: 100
   aliyunecs-private-address-only: false
+  aliyunecs-vpc-id: vpc-2zeayqrvhcs3zbio0ipu8
+  aliyunecs-vswitch-id: vsw-2zejldp7s1p25g7nmkvsi
   aliyunecs-region: cn-hangzhou
   aliyunecs-security-group: k8s
   aliyunecs-system-disk-category: cloud_efficiency
